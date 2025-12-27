@@ -1,0 +1,96 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+.pnp/
+.pnp.js
+
+# =========================
+# Next.js / React builds
+# =========================
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# =========================
+# Logs
+# =========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# =========================
+# Runtime data / caches
+# =========================
+.cache/
+.turbo/
+.vercel/
+.swc/
+.nyc_output/
+coverage/
+.eslintcache
+.stylelintcache
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# =========================
+# Local tooling / editors
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================
+# TypeScript / Node
+# =========================
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# Testing / Playwright / Cypress
+# =========================
+playwright-report/
+test-results/
+cypress/videos/
+cypress/screenshots/
+
+# =========================
+# Misc
+# =========================
+*.pem
+*.key
+*.crt
+*.p12
+*.keystore
+
+# If you generate Lighthouse output locally:
+public/lighthouse.json
+lighthouse*.json
