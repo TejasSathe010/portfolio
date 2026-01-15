@@ -1,4 +1,4 @@
-# Principal Portfolio
+# Portfolio
 
 A high-performance, feature-rich portfolio website built with Next.js, showcasing professional work, case studies, and interactive architecture visualizations. Designed for speed, clarity, and technical depth.
 
