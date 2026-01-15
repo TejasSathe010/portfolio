@@ -22,7 +22,12 @@ export async function GET(req: Request) {
   const url = searchParams.get("url");
 
   if (!url) return NextResponse.json({ error: "Missing url" }, { status: 400 });
-  if (!apiKey) return NextResponse.json({ error: "Missing GOOGLE_API_KEY" }, { status: 500 });
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "GOOGLE_API_KEY not configured", p75: null },
+      { status: 503 }
+    );
+  }
 
   const cacheKey = `crux:${url}`;
   const cached = readCache<{ p75: unknown }>(cacheKey);

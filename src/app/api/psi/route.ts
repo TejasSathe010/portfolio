@@ -25,7 +25,12 @@ export async function GET(req: Request) {
   const strategy = (searchParams.get("strategy") as Strategy) || "mobile";
 
   if (!url) return NextResponse.json({ error: "Missing url" }, { status: 400 });
-  if (!apiKey) return NextResponse.json({ error: "Missing GOOGLE_API_KEY" }, { status: 500 });
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "GOOGLE_API_KEY not configured", scores: null },
+      { status: 503 }
+    );
+  }
 
   const cacheKey = `psi:${strategy}:${url}`;
   const cached = readCache<{ scores: unknown }>(cacheKey);
