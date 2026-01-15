@@ -23,6 +23,7 @@ export type CaseStudy = {
   tradeoffs: string[];
   evidence: EvidenceItem[];
   intentNotes: Partial<Record<Intent, { focus: string; whatToAskMe: string[] }>>;
+  pdfPath?: string;
 };
 
 export const professionalSummary =
@@ -37,126 +38,252 @@ export const signatureMetrics = [
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "shipment-apis-at-scale-centiro",
-    title: "Shipment APIs at Scale (Centiro) — 40M Queries @ 250ms p95",
+    slug: "exactly-once-semantics-centiro",
+    title: "Exactly-Once Semantics (Centiro) Preventing SEV-1 Outages",
+    pdfPath: "/case-studies/Case-Study-Centiro.pdf",
     summary:
-      "Refactored TypeScript/Express shipment APIs and edge routing to sustain large query volume while keeping 250ms p95 latency and <0.03% errors during rollouts.",
-    tags: ["TypeScript", "Express", "Kafka", "Outbox", "Nginx", "Envoy", "AWS", "Kubernetes"],
-    timeline: "Feb 2025 – May 2025",
-    role: "Software Developer Intern • Backend + Platform reliability",
+      "Prevented 12 SEV-1 outages with transactional Kafka and idempotent sinks. Used epoch-based fencing to stop zombie producers and built a SHA-256 Redis filter for carrier APIs, reducing manual data reconciliation by 15 hours per week.",
+    tags: ["Kafka Transactions", "Redis", "Epoch-based Fencing", "SHA-256", "Java", "Spring Boot"],
+    timeline: "Mar 2022 – Jul 2023",
+    role: "Software Developer II • Distributed Systems + Reliability",
     highlights: [
-      "Sustained 40M document queries with consistent 250ms p95 latency.",
-      "Supported 25K RPS while holding error rate below 0.03% in staged cluster rollouts.",
-      "Exactly-once processing for 2M weekly records via Kafka Streams + Outbox guarantees.",
-      "Reduced integration regressions 38% by restructuring monorepo boundaries across React/Redux/Node."
+      "Prevented 12 SEV-1 outages with transactional Kafka and idempotent sinks.",
+      "Used epoch-based fencing to stop zombie producers during GC pauses.",
+      "Built SHA-256 Redis filter for carrier API deduplication.",
+      "Reduced manual data reconciliation by 15 hours per week."
     ],
     problem:
-      "Query-heavy shipment workflows were approaching performance ceilings: inconsistent p95 latency, fragile rollouts, and integration churn from unclear boundaries across services and UI layers.",
+      "Zombie producers caused duplicate carrier bookings during GC pauses, leading to data inconsistencies and manual reconciliation work.",
     constraints: [
-      "High cardinality queries with strict p95 targets under load.",
-      "Production safety: rollouts needed predictable error budgets and reversibility.",
-      "Event-driven correctness: transactional events could not duplicate or drop.",
-      "Monorepo complexity: dependencies caused regressions across layers."
+      "Carrier bookings could not be duplicated or lost.",
+      "Producers needed to handle JVM GC pauses without creating duplicates.",
+      "Solution needed to scale to 45K QPS without adding latency.",
+      "Idempotency checks needed to be fast and reliable."
     ],
     approach: [
-      "Refactored core shipment API paths (TypeScript + Express) around predictable query plans and stable response contracts.",
-      "Re-engineered Kafka Streams processing with Outbox guarantees to enforce exactly-once semantics for transactional records.",
-      "Hardened edge routing policies (Nginx/Envoy) and rollout strategy to preserve error budgets during staged deployments.",
-      "Restructured React/Redux/Node monorepo boundaries to reduce cross-layer coupling and regression surface area."
+      "Implemented transactional Kafka producers with epoch-based fencing to prevent duplicate transactions.",
+      "Built SHA-256 Redis filter to deduplicate carrier API calls.",
+      "Increased transaction timeouts from 60s to 120s for peak loads.",
+      "Added monitoring to track duplicate detection and transaction health."
     ],
     architecture: [
-      "API tier: TypeScript/Express with performance-focused query patterns and stable DTOs.",
-      "Event tier: Kafka Streams + Outbox pattern for idempotency and exactly-once processing.",
-      "Edge tier: Nginx + Envoy routing policies tuned for RPS, retries, and rollout safety.",
-      "Deployment: Kubernetes-based staged rollouts with error budget monitoring."
+      "Transactional Kafka producers with epoch-based fencing.",
+      "Redis-based SHA-256 hash filter for carrier API deduplication.",
+      "Prometheus metrics for duplicate detection and transaction health.",
+      "Staged rollouts with canary analysis."
     ],
     outcomes: [
-      "Sustained 40M document queries while maintaining ~250ms p95 latency.",
-      "Supported 25K RPS with <0.03% error rates during staged rollouts.",
-      "Ensured exactly-once processing for ~2M weekly transactional records.",
-      "Reduced integration regressions by 38% via clearer monorepo dependency boundaries."
+      "100% reduction in consistency-related SEV-1 incidents over 12 months.",
+      "Eliminated duplicate carrier bookings during GC pauses and network partitions.",
+      "Reduced manual data reconciliation by 15 hours per week.",
+      "Maintained 45K QPS throughput with minimal latency overhead."
     ],
     tradeoffs: [
-      "Optimized critical paths first; deferred non-blocking refactors to avoid rollout risk.",
-      "Used strict contracts to reduce regressions; accepted slightly slower iteration on schema changes.",
-      "Exactly-once guarantees added operational complexity; kept observability + replay paths explicit."
+      "Increased transaction timeouts improved resilience but required careful monitoring.",
+      "Redis filter added network hop but provided fast deduplication.",
+      "Epoch-based fencing added complexity but prevented zombie producers."
     ],
     evidence: [
-      { title: "PRs: API refactor + edge routing", type: "PR", href: "#", note: "Replace with internal PR links or sanitized screenshots." },
-      { title: "Kafka Outbox design note", type: "DOC", href: "#" },
-      { title: "Load test / rollout dashboard", type: "DASHBOARD", href: "#" }
+      { title: "Kafka transaction design doc", type: "DOC", href: "#" },
+      { title: "Redis filter implementation PR", type: "PR", href: "#" },
+      { title: "SEV-1 incident reduction dashboard", type: "DASHBOARD", href: "#" }
     ],
     intentNotes: {
       RECRUITER: {
-        focus: "Scale + reliability outcomes with clear business value.",
-        whatToAskMe: ["What broke before this?", "What teams consumed the API?", "How rollout safety was proven"]
+        focus: "Prevented critical outages and reduced operational overhead.",
+        whatToAskMe: ["How many SEV-1s occurred before this?", "What was the business impact?", "How was correctness validated?"]
       },
       HIRING_MANAGER: {
-        focus: "How I prioritized work, managed risk, and designed for long-term correctness.",
-        whatToAskMe: ["Tradeoffs vs fastest delivery", "What I would improve next", "How I reduced regressions structurally"]
+        focus: "Designing for correctness under failure conditions and GC pauses.",
+        whatToAskMe: ["Why epoch-based fencing over other approaches", "How the solution was validated", "Learnings about Kafka transactions"]
       },
     }
   },
   {
-    slug: "voice-ai-orchestration-jambonz",
-    title: "Voice AI Orchestration (Jambonz) — 1.2M Calls/Month @ 450ms p95",
+    slug: "fault-tolerance-centiro-intern",
+    title: "Fault Tolerance (Centiro Intern) Reducing p99 Latency by 180ms",
+    pdfPath: "/case-studies/Case%20Study-Centiro-Intern.pdf",
     summary:
-      "Integrated Python inference with Node orchestration across EKS, improved GPU inference throughput by 31%, and kept transcription services within 450ms p95 under peak load.",
-    tags: ["Python", "Flask", "Node.js", "AWS EKS", "GPU", "Jest", "OpenTelemetry", "SIP", "LLM"],
-    timeline: "Aug 2024 – Dec 2024",
-    role: "Software Developer Intern (GenAI Platform) • Systems + reliability",
+      "Reduced p99 latency 180ms by tuning G1GC MaxGCPauseMillis to 150ms and applying Resilience4j bulkheads. Implemented semaphore isolation for 500 carrier endpoints to prevent slow I/O from saturating the worker thread pool.",
+    tags: ["G1GC", "Resilience4j", "Java", "Spring Boot", "Thread Pool", "Semaphore"],
+    timeline: "Feb 2025 – May 2025",
+    role: "Software Engineer Intern (Graduate) • Performance + Reliability",
     highlights: [
-      "Scaled transcription microservices to 1.2M monthly calls while meeting 450ms p95 latency during peak load.",
-      "Improved GPU-backed Flask inference throughput by 31% without breaching latency SLOs.",
-      "Integrated Python inference with Node orchestration to coordinate SIP and LLM flows across horizontally scaled EKS nodes.",
-      "Expanded Jest-driven API tests to 94% coverage to enforce deterministic behavior pre-deployment."
+      "Reduced p99 latency 180ms by tuning G1GC MaxGCPauseMillis to 150ms.",
+      "Applied Resilience4j semaphore bulkheads for 500 carrier endpoints.",
+      "Prevented slow I/O from saturating worker thread pool.",
+      "Tracked improvements in Prometheus metrics and Grafana dashboards."
     ],
     problem:
-      "Real-time voice workloads needed consistent latency under bursts, while coordinating multiple systems (SIP routing, transcription, inference, orchestration) across horizontally scaled infrastructure.",
+      "p99 latency spiked to 1.5s due to CMS heap fragmentation and thread pool saturation. Slow carrier API calls blocked worker threads and triggered cascading timeouts.",
     constraints: [
-      "Real-time constraints: p95 latency targets during peak load.",
-      "GPU inference capacity: throughput improvements could not violate latency SLOs.",
-      "Distributed coordination: Node orchestration + Python inference needed stable contracts.",
-      "Determinism: test coverage required to prevent subtle regressions in execution paths."
+      "p99 needed to stay under 500ms during peak load.",
+      "500 carrier endpoints needed isolation without excessive overhead.",
+      "CMS heap fragmentation caused unpredictable pause times.",
+      "Worker threads needed protection from saturation."
     ],
     approach: [
-      "Integrated Python inference endpoints with Node orchestration to coordinate SIP + LLM control flow across EKS nodes.",
-      "Tuned transcription microservices for peak-load behavior while protecting p95 latency targets.",
-      "Revised GPU-backed Flask inference endpoints to increase parallel throughput while maintaining SLO guardrails.",
-      "Expanded Jest API test suites to 94% coverage to ensure deterministic behavior before deployment."
+      "Migrated from CMS to G1GC with MaxGCPauseMillis=150ms for predictable pause times.",
+      "Implemented Resilience4j semaphore bulkheads to isolate 500 carrier endpoints.",
+      "Adjusted MaxMetaspaceSize based on load telemetry to prevent OOMs.",
+      "Added Prometheus metrics to track thread pool utilization and GC pause times."
     ],
     architecture: [
-      "Orchestration: Node services managing SIP + workflow state.",
-      "Inference: GPU-backed Flask endpoints with concurrency controls and latency guardrails.",
-      "Scaling: horizontal scaling on AWS EKS with performance tracking per rollout.",
-      "Quality gates: Jest-driven coverage to protect distributed execution paths."
+      "G1GC with MaxGCPauseMillis=150ms for predictable garbage collection.",
+      "Resilience4j semaphore bulkheads per carrier endpoint.",
+      "Worker thread pool with semaphore-based concurrency limits.",
+      "Prometheus and Grafana dashboards for latency and GC metrics."
     ],
     outcomes: [
-      "Processed ~1.2M monthly calls with 450ms p95 latency during peak load.",
-      "Raised GPU inference parallel throughput by 31% without breaching SLOs.",
-      "Improved correctness confidence with 94% API test coverage for deterministic behavior."
+      "Reduced p99 latency by 180ms, from 1.5s spikes to manageable levels.",
+      "Eliminated thread pool saturation and cascading timeouts.",
+      "Achieved predictable GC pause times with G1GC.",
+      "Maintained system stability under peak load with 500 isolated endpoints."
     ],
     tradeoffs: [
-      "Chose guardrails over maximum throughput to protect real-time latency consistency.",
-      "Coverage prioritized high-risk paths first; avoided brittle tests that block iteration.",
-      "Kept interfaces explicit even when verbose to reduce cross-service ambiguity."
+      "G1GC provided better pause time predictability but required throughput tuning.",
+      "Semaphore bulkheads added overhead but were essential for isolation.",
+      "MaxMetaspaceSize tuning required careful monitoring."
     ],
     evidence: [
-      { title: "PRs: orchestration + inference integration", type: "PR", href: "#", note: "Replace with PR links or screenshots." },
-      { title: "Performance run notes", type: "DOC", href: "#" },
-      { title: "Test coverage report", type: "SCREENSHOT", href: "#" }
+      { title: "G1GC tuning design doc", type: "DOC", href: "#" },
+      { title: "Resilience4j bulkhead implementation PR", type: "PR", href: "#" },
+      { title: "Grafana latency heatmaps", type: "DASHBOARD", href: "#" }
     ],
     intentNotes: {
       RECRUITER: {
-        focus: "Scale + reliability in real-time voice AI systems.",
-        whatToAskMe: ["How performance was validated", "What “peak load” meant operationally"]
+        focus: "Significant latency improvement and system stability under load.",
+        whatToAskMe: ["What was the business impact of 1.5s spikes?", "How many carrier endpoints were affected?", "How was improvement validated?"]
       },
       HIRING_MANAGER: {
-        focus: "How I kept SLOs safe while improving throughput, plus quality gates.",
-        whatToAskMe: ["How I chose what to tune", "How I handled rollout risk", "How I structured tests"]
+        focus: "Diagnosing GC and thread pool issues, and designing isolation strategies.",
+        whatToAskMe: ["Why G1GC over other collectors", "How semaphore limits were sized", "What monitoring was critical"]
       },
     }
-  }
+  },
+  {
+    slug: "rag-tail-latency-jambonz",
+    title: "RAG Tail Latency (Jambonz) Reducing p99 by 320ms on 10TB Data",
+    pdfPath: "/case-studies/Case-Study-Jambonz.pdf",
+    summary:
+      "Reduced RAG p99 by 320ms over 10TB data by migrating pgvector from IVFFlat to HNSW and adding int8 quantization. Reduced vector footprint 75% and kept index in OS page cache, NDCG above 99.5%.",
+    tags: ["pgvector", "HNSW", "PostgreSQL", "Vector Search", "Quantization", "RAG"],
+    timeline: "Aug 2024 – Dec 2024",
+    role: "Software Engineer Intern (Graduate) • GenAI Platform + Performance",
+    highlights: [
+      "Reduced RAG p99 by 320ms over 10TB vector data.",
+      "Migrated pgvector from IVFFlat to HNSW graph search.",
+      "Added int8 quantization, reducing vector footprint by 75%.",
+      "Dropped p99 disk wait from 400ms to 45ms, NDCG above 99.5%."
+    ],
+    problem:
+      "IVFFlat indexing led to 800ms+ p99 spikes and high I/O wait on 10TB data. Vector indexes were too large for memory and required frequent disk access, causing unpredictable query latency.",
+    constraints: [
+      "NDCG needed to stay above 99.5% to maintain search quality.",
+      "10TB of vector data required efficient indexing and memory management.",
+      "p99 needed to be under 500ms for real-time RAG queries.",
+      "Vector indexes needed to fit in OS page cache for performance."
+    ],
+    approach: [
+      "Migrated pgvector indexes from IVFFlat to HNSW graph search for better recall and lower latency.",
+      "Implemented int8 quantization to reduce vector footprint by 75% while keeping quality.",
+      "Staggered maintenance windows and tuned maintenance_work_mem to prevent OOMs.",
+      "Optimized index parameters to keep index in OS page cache."
+    ],
+    architecture: [
+      "PostgreSQL with pgvector extension for vector storage and search.",
+      "HNSW graph-based indexes with int8 quantization for memory efficiency.",
+      "OS page cache for hot index segments to minimize disk I/O.",
+      "Query latency tracking and NDCG quality metrics."
+    ],
+    outcomes: [
+      "Reduced RAG p99 by 320ms, from 800ms+ spikes to manageable levels.",
+      "Reduced vector footprint by 75% through int8 quantization.",
+      "Dropped p99 disk wait from 400ms to 45ms by keeping index in page cache.",
+      "Maintained NDCG above 99.5% with significant performance improvements."
+    ],
+    tradeoffs: [
+      "HNSW provided better performance but required careful parameter tuning.",
+      "Int8 quantization reduced memory but required quality validation.",
+      "Index build times increased but were manageable with staggered maintenance."
+    ],
+    evidence: [
+      { title: "Vector search performance design doc", type: "DOC", href: "#" },
+      { title: "HNSW migration PR", type: "PR", href: "#" },
+      { title: "Query performance logs", type: "DASHBOARD", href: "#" }
+    ],
+    intentNotes: {
+      RECRUITER: {
+        focus: "Major performance improvement on large-scale vector search while keeping quality.",
+        whatToAskMe: ["What was the impact on user experience?", "How large was the vector dataset?", "How was quality validated?"]
+      },
+      HIRING_MANAGER: {
+        focus: "Evaluating indexing algorithms and balancing performance vs quality tradeoffs.",
+        whatToAskMe: ["Why HNSW over other algorithms", "How quantization quality was validated", "Learnings about vector search"]
+      },
+    }
+  },
+  // {
+  //   slug: "voice-ai-orchestration-jambonz",
+  //   title: "Voice AI Orchestration (Jambonz) 1.2M Calls/Month @ 440ms p95",
+  //   summary:
+  //     "Improved LLM streaming p95 to 440ms across 1.2M stateful sessions by autoscaling Node.js WebSocket gateway and Redis sessions. Implemented sticky session affinity to maintain bidirectional voice streams during horizontal scaling.",
+  //   tags: ["Node.js", "WebSocket", "Redis", "Kubernetes", "AWS", "LLM", "Autoscaling"],
+  //   timeline: "Aug 2024 – Dec 2024",
+  //   role: "Software Engineer Intern (Graduate) • GenAI Platform + Systems",
+  //   highlights: [
+  //     "Improved LLM streaming p95 to 440ms across 1.2M stateful sessions.",
+  //     "Autoscaled Node.js WebSocket gateway and Redis sessions for horizontal scaling.",
+  //     "Implemented sticky session affinity to maintain bidirectional voice streams.",
+  //     "Validated improvements through load tests and session monitoring dashboards."
+  //   ],
+  //   problem:
+  //     "Real-time voice workloads needed consistent latency under bursts. Coordinated multiple systems (SIP routing, transcription, inference, orchestration) across horizontally scaled infrastructure with stateful WebSocket connections.",
+  //   constraints: [
+  //     "p95 latency targets during peak load for voice streams.",
+  //     "WebSocket connections needed to persist during horizontal scaling.",
+  //     "1.2M monthly sessions required efficient session management.",
+  //     "Multiple systems needed stable contracts for voice flow."
+  //   ],
+  //   approach: [
+  //     "Autoscaled Node.js WebSocket gateway with Kubernetes HPA based on connection count and CPU metrics.",
+  //     "Implemented sticky session affinity using Redis session store.",
+  //     "Coordinated SIP and LLM control flow across horizontally scaled EKS nodes.",
+  //     "Optimized Next.js concurrent rendering and streaming for dashboard responsiveness."
+  //   ],
+  //   architecture: [
+  //     "Node.js WebSocket gateway with Kubernetes autoscaling and sticky session affinity.",
+  //     "Redis for distributed session management across horizontally scaled nodes.",
+  //     "Node services managing SIP and workflow state with Redis coordination.",
+  //     "Next.js with concurrent rendering and Web Workers for dashboard performance."
+  //   ],
+  //   outcomes: [
+  //     "Processed 1.2M monthly calls with 440ms p95 latency during peak load.",
+  //     "Maintained bidirectional voice streams during horizontal scaling.",
+  //     "Improved INP by 150ms and increased interactivity 30% on dashboard.",
+  //     "Cut infra cost 25% through automated Terraform canary rollbacks and HPA policies."
+  //   ],
+  //   tradeoffs: [
+  //     "Sticky sessions improved reliability but required careful load balancing.",
+  //     "Redis session store added network hop but enabled horizontal scaling.",
+  //     "Autoscaling improved cost efficiency but required careful metric selection."
+  //   ],
+  //   evidence: [
+  //     { title: "WebSocket autoscaling PR", type: "PR", href: "#" },
+  //     { title: "Load test results", type: "DOC", href: "#" },
+  //     { title: "Session monitoring dashboard", type: "DASHBOARD", href: "#" }
+  //   ],
+  //   intentNotes: {
+  //     RECRUITER: {
+  //       focus: "Scaled real-time voice AI systems to 1.2M sessions with consistent latency.",
+  //       whatToAskMe: ["What was peak load?", "How was latency validated?", "What was the cost impact?"]
+  //     },
+  //     HIRING_MANAGER: {
+  //       focus: "Designing for stateful systems at scale and managing horizontal scaling challenges.",
+  //       whatToAskMe: ["How autoscaling metrics were chosen", "How session migration was handled", "Learnings about WebSocket scaling"]
+  //     },
+  //   }
+  // }
 ];
 
 export type WorkItem = {
@@ -172,31 +299,30 @@ export type WorkItem = {
 export const work: WorkItem[] = [
   {
     company: "Centiro Solutions (Global Supply-Chain SaaS)",
-    title: "Software Developer Intern",
+    title: "Software Engineer Intern (Graduate)",
     location: "Boston, Massachusetts",
     start: "Feb 2025",
     end: "May 2025",
     bullets: [
-      "Refactored shipment APIs using TypeScript and Express to sustain 40M document queries with consistent 250ms p95 latency.",
-      "Restructured React, Redux, and Node.js monorepo layers; cut integration regressions 38% through clearer dependency boundaries.",
-      "Re-engineered Kafka Streams flows with Outbox guarantees to ensure exactly-once processing for 2M weekly transactional records.",
-      "Adjusted Nginx and Envoy routing policies to support 25K RPS while keeping error rates below 0.03% during staged cluster rollouts."
+      "Accelerated API integration cycle 45% by resolving 22 service conflicts using Protobuf schema evolution and gRPC methods, replacing JSON with typed schemas for independent service updates.",
+      "Reduced p99 latency 180ms by tuning G1GC MaxGCPauseMillis to 150ms and applying Resilience4j bulkheads, implementing semaphore isolation for 500 carrier endpoints.",
+      "Optimized React state with Redux and cut payload 40% with Apollo cache normalization across federated GraphQL domains, eliminating redundant shipping manifest over-fetching."
     ],
-    stack: ["TypeScript", "Express", "React", "Redux", "Kafka", "Nginx", "Envoy", "Kubernetes"]
+    stack: ["Java", "Spring Boot", "Protobuf", "gRPC", "Resilience4j", "G1GC", "React", "Redux", "GraphQL", "Apollo"]
   },
   {
     company: "FirstFive8 / Jambonz (Voice AI Infrastructure Platform)",
-    title: "Software Developer Intern — GenAI Platform",
+    title: "Software Engineer Intern (Graduate)",
     location: "Boston, Massachusetts",
     start: "Aug 2024",
     end: "Dec 2024",
     bullets: [
-      "Integrated Python inference with Node orchestration to coordinate SIP and LLM flows across horizontally scaled AWS EKS nodes.",
-      "Tuned transcription microservices to process 1.2M monthly calls while meeting 450ms p95 latency thresholds during peak load.",
-      "Revised GPU-backed Flask inference endpoints to raise parallel throughput 31% without breaching defined model latency SLOs.",
-      "Expanded Jest-driven API test suites to 94% coverage, confirming deterministic behavior across execution paths pre-deployment."
+      "Improved LLM streaming p95 to 440ms across 1.2M stateful sessions by autoscaling Node.js WebSocket gateway and Redis sessions, implementing sticky session affinity for horizontal scaling.",
+      "Reduced RAG p99 by 320ms over 10TB data by migrating pgvector from IVFFlat to HNSW and adding int8 quantization, reducing vector footprint 75% and dropping p99 disk wait from 400ms to 45ms.",
+      "Cut infra cost 25% by automating Terraform canary rollbacks and setting Kubernetes HPA policies, minimizing over-provisioning during off-peak hours.",
+      "Improved INP by 150ms and increased interactivity 30% by optimizing Next.js concurrent rendering and streaming, offloading heavy parsing to Web Workers."
     ],
-    stack: ["Python", "Flask", "Node.js", "AWS EKS", "GPU", "Jest", "SIP", "OpenTelemetry"]
+    stack: ["Node.js", "WebSocket", "Redis", "pgvector", "HNSW", "Terraform", "Kubernetes", "AWS", "Next.js", "TypeScript"]
   },
   {
     company: "Centiro Solutions (Global Shipment & Logistics Platform)",
@@ -205,12 +331,12 @@ export const work: WorkItem[] = [
     start: "Mar 2022",
     end: "Jul 2023",
     bullets: [
-      "Rebuilt logistics workflows using React 18, GraphQL, and Spring Boot to enforce multi-tenant routing rules across Kubernetes pods.",
-      "Scaled Java REST workloads with async I/O and Redis caching to reliably deliver 22K RPS under strict 99.99% availability limits.",
-      "Established Protobuf-based schema evolution and GitOps flow to remove drift across 200+ Kafka producers and consumer services.",
-      "Mentored junior engineers on distributed design and review methods, improving architectural consistency across three teams."
+      "Prevented 12 SEV-1 outages with transactional Kafka and idempotent sinks, using epoch-based fencing to stop zombie producers and building SHA-256 Redis filter for carrier APIs, reducing manual data reconciliation by 15 hours per week.",
+      "Instrumented Prometheus SLIs and Grafana dashboards to pinpoint thread contention hotspots in the JVM fleet, cutting MTTR by mapping stack trace samples to service endpoints.",
+      "Boosted system throughput to 45K QPS by tuning Kafka partition rebalancing and building asynchronous worker pools, optimizing consumer group coordination and producer batch sizes.",
+      "Compressed LCP to 2.1s and bundle size 35% by enabling tree-shaking and lazy loading across a modular React design system, deferring non-critical component initialization."
     ],
-    stack: ["React 18", "GraphQL", "Spring Boot", "Redis", "Kafka", "Protobuf", "Kubernetes", "GitOps"]
+    stack: ["Java", "Spring Boot", "Kafka Transactions", "Redis", "PostgreSQL", "Prometheus", "Grafana", "React", "Micrometer"]
   },
   {
     company: "Cognizant (Client: Discover Financial Services)",
@@ -219,12 +345,22 @@ export const work: WorkItem[] = [
     start: "Dec 2020",
     end: "Mar 2022",
     bullets: [
-      "Implemented Python Flask microservices delivering telemetry APIs that processed 1.6M operational events daily under sustained load.",
-      "Reduced PostgreSQL query latency 42% by refining SQLAlchemy caching strategies to maintain performance during concurrent usage.",
-      "Containerized backend services with Docker and deployed on AWS ECS using Jenkins pipelines and CloudFormation automation.",
-      "Enhanced Prometheus and Grafana ingestion tasks in Python to improve failure visibility and cut MTTR by nearly 65% across systems."
+      "Monitored Linux services with Python asyncio and eBPF, cutting MTTR 30% with automated event correlation into ServiceNow, building probes to capture kernel-level syscalls for early failure detection.",
+      "Shortened debugging cycle 45% by streaming kernel trace events to a React UI using Web Workers for parallel parsing, designing a virtualized list to handle thousands of events per second."
     ],
-    stack: ["Python", "Flask", "PostgreSQL", "AWS ECS", "Jenkins", "CloudFormation", "Prometheus", "Grafana"]
+    stack: ["Python", "asyncio", "eBPF", "Linux", "React", "Web Workers", "ServiceNow"]
+  },
+  {
+    company: "Polestar Consulting Pvt. Ltd.",
+    title: "Software Developer Intern",
+    location: "Pune, Maharashtra, India",
+    start: "Jun 2019",
+    end: "Feb 2020",
+    bullets: [
+      "Tuned Python Flask ML services to cut inference latency 240ms using Redis cache, micro-batching, and async I/O, optimizing model loading and implementing look-aside caching.",
+      "Architected React dashboards and Node.js APIs to track model drift across 50k daily forecasts using stream ingestion, building an aggregation layer to reduce data store load and provide real-time alerts."
+    ],
+    stack: ["Python", "Flask", "Redis", "React", "Node.js", "Stream Ingestion"]
   }
 ];
 
@@ -235,16 +371,16 @@ export type AwardItem = {
 
 export const awards: AwardItem[] = [
   {
-    title: "TADHack Hackathon — 1st Place",
-    detail: "Designed a GenAI PII-redaction pipeline for call logs, outperforming 40+ U.S. engineering teams."
+    title: "TADHack Winner 1st Place",
+    detail: "Won 1st place by engineering PII redaction with Whisper AI, outperforming 40 teams for a $2K prize. Integrated a real-time audio pipeline that scrubbed sensitive data during live voice streams by fine-tuning models for medical and financial entities."
   },
   {
-    title: "DevCon Hackathon — Team Lead & Winner",
-    detail: "Led 4 engineers to build a speech translator achieving 95% accuracy with sub-second latency."
+    title: "DevCon Winner Team Lead & Winner",
+    detail: "Led 4 engineers to win by shipping a quantized edge speech translator with 95% accuracy and 1s local inference. Used INT8 quantization and custom kernels to ensure high-fidelity translation on low-power hardware without GPU or network access."
   },
   {
     title: "Jambonz Open Source Contributor",
-    detail: "Added reliability checks and CI automation to core repos, contributing to a full-time internship offer."
+    detail: "Hardened Jambonz OSC reliability with circuit breakers and health checks to secure a return offer. Rewrote service discovery logic to be resilient to partial network failures, preventing system-wide crashes by isolating failing SIP trunking nodes."
   }
 ];
 
@@ -258,6 +394,43 @@ export type ProjectItem = {
 
 export const projects: ProjectItem[] = [
   {
+    name: "Node.js Core",
+    stack: ["Node.js", "C++", "V8", "ESM", "Module System"],
+    links: [{ label: "GitHub Issue", href: "https://github.com/nodejs/node/issues/61013" }],
+    bullets: [
+      "Proposed ESM loader architecture for Node.js import(blobUrls) by mapping get_format.js and C++ sync byte fetches.",
+      "Audited internal resolution logic to support dynamic code loading while keeping V8 module lifecycle integrity."
+    ]
+  },
+  {
+    name: "Redix",
+    stack: ["Golang", "Raft", "LSM-tree", "Redis Protocol", "Clustering", "WAL"],
+    timeframe: "Aug 2024 – Apr 2025",
+    links: [{ label: "GitHub", href: "#" }],
+    bullets: [
+      "Built a Golang RESP-compliant KV store achieving 100k writes/s and 10ms p99 using Raft consensus and LSM-tree storage.",
+      "Implemented Write-Ahead Logging and memory-mapped files to guarantee persistence with high concurrency across nodes."
+    ]
+  },
+  {
+    name: "Aegis Runtime",
+    stack: ["Node.js", "NPM", "OpenTelemetry", "LLM", "Middleware"],
+    links: [{ label: "NPM Package", href: "#" }],
+    bullets: [
+      "Developed NPM middleware for LLM governance that enforced token budgets and AuthZ with OTel hooks.",
+      "Implemented an interceptor pattern to analyze payloads and prevent unauthorized usage, with detailed traces for cost-saving and compliance."
+    ]
+  },
+  {
+    name: "TokenThrifty",
+    stack: ["Node.js", "TF-IDF", "LLM", "Compression", "OpenAI API"],
+    links: [{ label: "GitHub", href: "#" }],
+    bullets: [
+      "Reduced LLM cost 70% for 60 users by using TF-IDF compression and request interception.",
+      "Built a pre-processor that pruned redundant context from prompts before API calls, dynamically adjusting ratios to preserve critical instructions."
+    ]
+  },
+  {
     name: "TechLitHub",
     stack: ["React", "Node.js", "MongoDB", "AWS", "Redis", "TensorFlow"],
     links: [
@@ -265,16 +438,9 @@ export const projects: ProjectItem[] = [
       { label: "Live", href: "#" }
     ],
     bullets: [
-      "Constructed full-stack blog system ingesting 20+ posts/sec while maintaining sub-1s FMP.",
+      "Constructed full-stack blog system ingesting 20+ posts/sec with sub-1s FMP.",
       "Supported 1K+ monthly readers with a clean authoring and ingestion workflow."
     ]
-  },
-  {
-    name: "Redix",
-    stack: ["Golang", "Raft", "LSM-tree", "Redis Protocol", "Clustering"],
-    timeframe: "Aug 2024 – Apr 2025",
-    links: [{ label: "GitHub", href: "#" }],
-    bullets: ["Built a Raft-coordinated in-memory datastore using LSM-tree storage, sustaining 100K writes/sec during EC2-based cluster tests."]
   }
 ];
 

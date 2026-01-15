@@ -94,3 +94,5 @@ cypress/screenshots/
 # If you generate Lighthouse output locally:
 public/lighthouse.json
 lighthouse*.json
+
+resume.txt

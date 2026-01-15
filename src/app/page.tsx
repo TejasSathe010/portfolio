@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { IntentBanner } from "@/components/IntentBanner";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { caseStudies, professionalSummary, signatureMetrics } from "@/lib/content";
+import { Reveal } from "@/components/ui/Reveal";
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
@@ -239,7 +240,9 @@ export default function HomePage() {
       </section>
 
       {/* Audience guidance */}
-      <IntentBanner />
+      <Reveal delayMs={0}>
+        <IntentBanner />
+      </Reveal>
 
       <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
 
@@ -288,7 +291,7 @@ export default function HomePage() {
           />
           <SignalTile
             title="Evidence"
-            desc="Receipts: audits, live vitals, artifacts — without clutter."
+            desc="Receipts: audits, live vitals, artifacts without clutter."
             href="/evidence"
             meta={
               <>
@@ -323,27 +326,31 @@ export default function HomePage() {
 
       {/* FEATURED DEEP DIVES */}
       <section className="space-y-4" aria-label="Featured case studies">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold tracking-tight text-fg">Featured deep dives</h2>
-            <p className="mt-1 text-sm text-muted">Two projects that best show performance and rollout safety.</p>
+        <Reveal>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight text-fg">Featured deep dives</h2>
+              <p className="mt-1 text-sm text-muted">Two projects that best show performance and rollout safety.</p>
+            </div>
+            <Link href="/case-studies" className="text-sm text-fg/70 hover:text-fg">
+              View all →
+            </Link>
           </div>
-          <Link href="/case-studies" className="text-sm text-fg/70 hover:text-fg">
-            View all →
-          </Link>
-        </div>
+        </Reveal>
 
         <div className="grid gap-4 md:grid-cols-2 items-stretch [grid-auto-rows:1fr]">
-          {top.map((c) => (
-            <CaseStudyCard
-              key={c.slug}
-              href={`/case-studies/${c.slug}`}
-              title={c.title}
-              summary={c.summary}
-              timeline={c.timeline}
-              tags={c.tags}
-              bullets={c.highlights}
-            />
+          {top.map((c, idx) => (
+            <Reveal key={c.slug} delayMs={idx * 70}>
+              <CaseStudyCard
+                key={c.slug}
+                href={`/case-studies/${c.slug}`}
+                title={c.title}
+                summary={c.summary}
+                timeline={c.timeline}
+                tags={c.tags}
+                bullets={c.highlights}
+              />
+            </Reveal>
           ))}
         </div>
       </section>
@@ -413,47 +420,57 @@ export default function HomePage() {
       <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
 
       {/* EXPLORE */}
-      <section className="grid gap-4 md:grid-cols-4 items-stretch [grid-auto-rows:1fr]" aria-label="Explore sections">
-        <Link href="/start" className="block">
-          <Card className="h-full">
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Start</div>
-              <div className="mt-1 text-sm text-muted">Guided scan built for fast decisions.</div>
-            </CardHeader>
-            <CardContent className="text-sm text-fg/70">Open →</CardContent>
-          </Card>
-        </Link>
+      <Reveal>
+        <section className="grid gap-4 md:grid-cols-4 items-stretch [grid-auto-rows:1fr]" aria-label="Explore sections">
+          <Reveal key="/start" delayMs={1 * 70}>
+            <Link href="/start" className="block">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="text-sm font-semibold text-fg">Start</div>
+                  <div className="mt-1 text-sm text-muted">Guided scan built for fast decisions.</div>
+                </CardHeader>
+                <CardContent className="text-sm text-fg/70">Open →</CardContent>
+              </Card>
+            </Link>
+          </Reveal>
 
-        <Link href="/work" className="block">
-          <Card className="h-full">
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Work</div>
-              <div className="mt-1 text-sm text-muted">Timeline with progressive disclosure.</div>
-            </CardHeader>
-            <CardContent className="text-sm text-fg/70">Open →</CardContent>
-          </Card>
-        </Link>
+          <Reveal key="/work" delayMs={2 * 70}>
+            <Link href="/work" className="block">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="text-sm font-semibold text-fg">Work</div>
+                  <div className="mt-1 text-sm text-muted">Timeline with progressive disclosure.</div>
+                </CardHeader>
+                <CardContent className="text-sm text-fg/70">Open →</CardContent>
+              </Card>
+            </Link>
+          </Reveal>
 
-        <Link href="/postmortems" className="block">
-          <Card className="h-full">
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Postmortems</div>
-              <div className="mt-1 text-sm text-muted">Reliability thinking: RCA → fixes → prevention.</div>
-            </CardHeader>
-            <CardContent className="text-sm text-fg/70">Open →</CardContent>
-          </Card>
-        </Link>
+          <Reveal key="/postmortems" delayMs={3 * 70}>
+            <Link href="/postmortems" className="block">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="text-sm font-semibold text-fg">Postmortems</div>
+                  <div className="mt-1 text-sm text-muted">Reliability thinking: RCA → fixes → prevention.</div>
+                </CardHeader>
+                <CardContent className="text-sm text-fg/70">Open →</CardContent>
+              </Card>
+            </Link>
+          </Reveal>
 
-        <Link href="/evidence" className="block">
-          <Card className="h-full">
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Evidence</div>
-              <div className="mt-1 text-sm text-muted">Audits, live signals, artifacts, receipts.</div>
-            </CardHeader>
-            <CardContent className="text-sm text-fg/70">Open →</CardContent>
-          </Card>
-        </Link>
-      </section>
+          <Reveal key="/evidence" delayMs={3 * 70}>
+            <Link href="/evidence" className="block">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="text-sm font-semibold text-fg">Evidence</div>
+                  <div className="mt-1 text-sm text-muted">Audits, live signals, artifacts, receipts.</div>
+                </CardHeader>
+                <CardContent className="text-sm text-fg/70">Open →</CardContent>
+              </Card>
+            </Link>
+          </Reveal>
+        </section>
+      </Reveal>
     </div>
   );
 }

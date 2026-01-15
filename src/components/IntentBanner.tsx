@@ -143,7 +143,7 @@ export function IntentBanner() {
           title: "Decision context + proof",
           subtitle: "Emphasis on tradeoffs, rollout safety, and measurable reliability. Proof is where it belongs.",
           bullets: [
-            "Case studies explain constraints, design choices, and tradeoffs—clearly and concretely.",
+            "Case studies explain constraints, design choices, and tradeoffs clearly and concretely.",
             "Evidence shows performance signals (lab + live) and artifacts without cluttering the story.",
             "Work provides supporting breadth and consistency across environments."
           ],

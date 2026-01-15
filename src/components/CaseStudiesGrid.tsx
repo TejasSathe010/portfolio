@@ -421,6 +421,7 @@ export function CaseStudiesGrid() {
             timeline={c.timeline}
             tags={c.tags}
             bullets={c.highlights}
+            pdfPath={c.pdfPath}
           />
         ))}
       </div>

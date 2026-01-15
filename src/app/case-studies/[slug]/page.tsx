@@ -12,6 +12,8 @@ import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { deriveKeyMetrics } from "@/lib/keyMetrics";
 import { KeyMetricsRow } from "@/components/caseStudies/KeyMetricsRow";
 import { Button } from "@/components/ui/Button";
+import type { CSSProperties } from "react";
+import { VTLink } from "@/components/VTLink";
 
 export async function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
@@ -101,6 +103,11 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
   const cs = caseStudies.find((c) => c.slug === params.slug);
   if (!cs) return notFound();
 
+  type VTStyle = CSSProperties & { viewTransitionName?: string };
+  const heroStyle: VTStyle = { viewTransitionName: `cs-card-${cs.slug}` };
+  const titleStyle: VTStyle = { viewTransitionName: `cs-title-${cs.slug}` };
+  const tagsStyle: VTStyle = { viewTransitionName: `cs-tags-${cs.slug}` };
+
   const metrics = deriveKeyMetrics(cs);
 
   const idx = caseStudies.findIndex((c) => c.slug === cs.slug);
@@ -110,7 +117,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
   return (
     <div className="space-y-8">
       {/* HERO */}
-      <header id="overview" className="space-y-4 scroll-mt-28">
+      <header id="overview" className="space-y-4 scroll-mt-28" style={heroStyle}>
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
           <span className="rounded-full border border-border/70 bg-card/60 px-3 py-1 font-semibold text-fg/70">
             {cs.timeline}
@@ -123,13 +130,13 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           </div>
         </div>
 
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl leading-tight">
+        <h1 style={titleStyle} className="text-balance text-2xl font-semibold tracking-tight text-fg md:text-3xl lg:text-4xl leading-tight break-words">
           {cs.title}
         </h1>
 
-        <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted">{cs.summary}</p>
+        <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted break-words">{cs.summary}</p>
 
-        <div className="flex flex-wrap items-center gap-2 pt-1">
+        <div className="flex flex-wrap items-center gap-2 pt-1" style={tagsStyle}>
           {cs.tags.slice(0, 10).map((t) => (
             <span
               key={t}
@@ -145,8 +152,20 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           ) : null}
         </div>
 
-        <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           <EvidenceDrawer title="Evidence" items={cs.evidence} />
+          {cs.pdfPath ? (
+            <a
+              href={cs.pdfPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-2xl border border-border/70 bg-card/60 px-4 py-2.5 text-sm font-semibold text-fg transition shadow-soft hover:bg-fg/[0.03] hover:shadow-lift motion-safe:hover:-translate-y-0.5"
+            >
+              <span>📄</span>
+              <span>View PDF</span>
+              <span className="text-xs opacity-60">↗</span>
+            </a>
+          ) : null}
           <Button asChild variant="secondary">
             <Link href="/case-studies">Back to list</Link>
           </Button>
@@ -191,7 +210,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           <CardHeader>
             <HeaderRow title="Problem" desc="What was failing or missing." anchorId="problem" />
           </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-fg/80">{cs.problem}</CardContent>
+          <CardContent className="text-sm leading-relaxed text-fg/80 break-words">{cs.problem}</CardContent>
         </Card>
 
         <Card id="highlights" className="scroll-mt-28 h-full">
@@ -222,7 +241,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
                 <div className="grid h-7 w-7 place-items-center rounded-xl border border-border/70 bg-card/60 text-xs font-semibold text-fg/70">
                   {i + 1}
                 </div>
-                <div className="leading-relaxed text-pretty">{a}</div>
+                <div className="leading-relaxed text-pretty break-words">{a}</div>
               </li>
             ))}
           </ol>
@@ -284,31 +303,31 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
       {/* Prev / Next navigation */}
       <section aria-label="More case studies" className="grid gap-4 md:grid-cols-2">
         {prev ? (
-          <Link href={`/case-studies/${prev.slug}`} className="block">
+          <VTLink href={`/case-studies/${prev.slug}`} className="block">
             <Card>
               <CardHeader>
                 <div className="text-xs text-muted">Previous</div>
-                <div className="mt-1 text-sm font-semibold text-fg">{prev.title}</div>
-                <div className="mt-1 text-sm text-muted">{prev.summary}</div>
+                <div className="mt-1 text-sm font-semibold text-fg line-clamp-2 break-words">{prev.title}</div>
+                <div className="mt-1 text-sm text-muted line-clamp-2 break-words">{prev.summary}</div>
               </CardHeader>
               <CardContent className="text-sm text-fg/70">Open →</CardContent>
             </Card>
-          </Link>
+          </VTLink>
         ) : (
           <div />
         )}
 
         {next ? (
-          <Link href={`/case-studies/${next.slug}`} className="block">
+          <VTLink href={`/case-studies/${next.slug}`} className="block">
             <Card>
               <CardHeader>
                 <div className="text-xs text-muted">Next</div>
-                <div className="mt-1 text-sm font-semibold text-fg">{next.title}</div>
-                <div className="mt-1 text-sm text-muted">{next.summary}</div>
+                <div className="mt-1 text-sm font-semibold text-fg line-clamp-2 break-words">{next.title}</div>
+                <div className="mt-1 text-sm text-muted line-clamp-2 break-words">{next.summary}</div>
               </CardHeader>
               <CardContent className="text-sm text-fg/70">Open →</CardContent>
             </Card>
-          </Link>
+          </VTLink>
         ) : null}
       </section>
     </div>

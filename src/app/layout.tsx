@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { site } from "@/lib/site";
 import { IntentProvider } from "@/components/IntentProvider";
@@ -13,6 +14,11 @@ import { StructuredData } from "@/components/StructuredData";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
+const EngineeringMode = dynamic(
+  () => import("@/components/EngineeringMode").then((m) => m.EngineeringMode),
+  { ssr: false }
+);
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} — ${site.tagline}`, template: `%s — ${site.name}` },
@@ -22,6 +28,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${mono.variable}`}>
+      <head>
+        <meta name="view-transition" content="same-origin" />
+      </head>
       <body className="antialiased min-h-dvh">
         <IntentProvider>
           <Header />
@@ -35,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CommandPalette />
           <VitalsReporter />
           <TelemetryOverlay />
+          <EngineeringMode />
         </IntentProvider>
       </body>
     </html>

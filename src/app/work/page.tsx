@@ -1,3 +1,4 @@
+import { AwardsSection } from "@/components/AwardsSection";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { work, awards, projects, education } from "@/lib/content";
 
@@ -180,23 +181,7 @@ export default function WorkPage() {
         </div>
       </section>
 
-      <section className="space-y-4 scroll-mt-28" id="awards" aria-label="Awards and leadership">
-        <div className="space-y-1">
-          <h2 className="text-xl font-semibold tracking-tight text-fg">Awards & Leadership</h2>
-          <p className="text-sm text-muted">Signals beyond output: recognition, initiative, and leverage.</p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {awards.map((a) => (
-            <Card key={a.title}>
-              <CardHeader>
-                <div className="text-sm font-semibold text-fg">{a.title}</div>
-              </CardHeader>
-              <CardContent className="text-sm text-fg/80">{a.detail}</CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <AwardsSection awards={awards} />
 
       <section className="space-y-4 scroll-mt-28" id="education" aria-label="Education">
         <div className="space-y-1">
