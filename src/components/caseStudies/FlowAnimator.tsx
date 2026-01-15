@@ -50,11 +50,9 @@ export function FlowAnimator({
             const length = pathEl.getTotalLength();
             lengths.set(edgeId, length);
           } catch {
-            
             lengths.set(edgeId, 200);
           }
         } else {
-          
           lengths.set(edgeId, 200);
         }
       });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 import type { ArchNode } from "@/lib/architectures";
 
 type GroupContainerProps = {
