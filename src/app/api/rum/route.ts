@@ -18,7 +18,6 @@ export async function POST(req: Request) {
     const parsed = RumSchema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ ok: false }, { status: 400 });
 
-    // Production extension: write to a datastore (Postgres/ClickHouse) or a log pipeline.
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch {
     return NextResponse.json({ ok: false }, { status: 400 });

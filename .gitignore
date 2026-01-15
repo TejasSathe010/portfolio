@@ -96,3 +96,4 @@ public/lighthouse.json
 lighthouse*.json
 
 resume.txt
+cleanup-comments.js
