@@ -119,7 +119,7 @@ function CanvasInner({
   const guidedController = useGuidedController({
     timeline,
     speed,
-    onStepChange: () => {}
+    onStepChange: () =>
   });
 
   useEffect(() => {
@@ -376,9 +376,7 @@ function CanvasInner({
       </div>
 
       <div className="overflow-x-auto rounded-3xl border-2 border-border/90 bg-gradient-to-br from-card/98 via-card/95 to-card/98 shadow-2xl backdrop-blur-md relative">
-        {}
         <div className="absolute inset-0 rounded-3xl overflow-hidden">
-          {}
           <div 
             className="absolute inset-0 opacity-[0.025]"
             style={{
@@ -389,12 +387,10 @@ function CanvasInner({
               backgroundSize: '50px 50px'
             }}
           />
-          {}
           <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand2/[0.02] pointer-events-none" />
         </div>
         
         <div ref={canvasRef} className="relative" style={{ width: '100%', minWidth: 2200, height, minHeight: 1000 }}>
-          {}
           {model.groups?.map((group) => (
             <GroupContainer
               key={group.id}
@@ -406,8 +402,6 @@ function CanvasInner({
               canvasHeight={1000}
             />
           ))}
-          
-          {}
           <svg 
             ref={svgRef}
             data-canvas-svg
@@ -489,7 +483,6 @@ function CanvasInner({
               
               return (
                 <g key={edgeId}>
-                  {}
                   {emphasized && (
                     <>
                       <path
@@ -512,7 +505,6 @@ function CanvasInner({
                       />
                     </>
                   )}
-                  {}
                   <path
                     data-edge-id={edgeId}
                     d={path}
@@ -534,7 +526,6 @@ function CanvasInner({
                   />
                   {e.label ? (
                     <g>
-                      {}
                       <rect
                         x={mx - (e.label.length * 4.2 + 10)}
                         y={my - 12}
@@ -570,8 +561,6 @@ function CanvasInner({
               );
             })}
           </svg>
-
-          {}
           {mode !== "static" && (
             <FlowAnimator
               edges={edges}
@@ -583,8 +572,6 @@ function CanvasInner({
               prefersReducedMotion={prefersReducedMotion}
             />
           )}
-
-          {}
           <div className="absolute inset-0 z-20">
             {nodes.map((n) => {
               const p = positions.get(n.id);
@@ -611,7 +598,6 @@ function CanvasInner({
                     minHeight: '70px'
                   }}
                 >
-                  {}
                   <div 
                     className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
@@ -622,8 +608,6 @@ function CanvasInner({
                         : "radial-gradient(circle at 50% 30%, rgba(var(--fg), 0.08), transparent 75%)"
                     }}
                   />
-                  
-                  {}
                   <div 
                     className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden"
                   >
@@ -660,7 +644,6 @@ function CanvasInner({
       </div>
 
       <div className="mt-4 space-y-3">
-        {}
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/60 bg-gradient-to-r from-card/50 via-card/40 to-card/50 px-4 py-2.5 text-xs shadow-sm">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-brand/80 shadow-sm shadow-brand/30" />
@@ -688,8 +671,6 @@ function CanvasInner({
             <span className="text-[11px] font-medium">Scenario emphasis highlights active paths</span>
           </div>
         </div>
-
-        {}
         {mode === "guided" && active.timeline && active.timeline.length > 0 && (
           <FlowCommentary
             model={model}
@@ -745,8 +726,6 @@ export function ArchitectureCanvas({ model }: { model: ArchitectureModel }) {
           </button>
           </div>
         </div>
-
-        {}
         <div className="px-5 pt-4 pb-3 border-b border-border/40 bg-gradient-to-br from-card/50 via-card/40 to-card/50">
           <div className="flex flex-wrap items-center gap-3 mb-2">
             <div className="flex items-center gap-2">
