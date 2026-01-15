@@ -119,7 +119,7 @@ function CanvasInner({
   const guidedController = useGuidedController({
     timeline,
     speed,
-    onStepChange: () =>
+    onStepChange: () => {}
   });
 
   useEffect(() => {
