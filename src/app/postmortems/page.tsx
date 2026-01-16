@@ -83,13 +83,13 @@ export default function PostmortemsPage() {
       <header className="space-y-3">
         <div className="inline-flex items-center gap-2 rounded-2xl border border-border/70 bg-card/70 px-3 py-2 text-xs text-fg/70 shadow-soft backdrop-blur">
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-brand to-brand2" />
-          Reliability notes • RCAs • mitigations
+          Reliability analysis • root cause analysis • prevention
         </div>
 
         <h1 className="text-3xl font-semibold tracking-tight text-fg">Postmortems</h1>
 
         <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted">
-          Incidents written for clarity: what happened, why it happened, what changed, and how recurrence is prevented.
+          Incident analysis written for clarity: what happened, why it happened, what changed, and how we prevent recurrence.
         </p>
 
         {/* Summary strip */}
@@ -97,13 +97,13 @@ export default function PostmortemsPage() {
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <div className="text-xs text-muted">Coverage</div>
             <div className="mt-1 text-sm font-semibold text-fg">Rollouts, queues, idempotency</div>
-            <div className="mt-1 text-xs text-muted">Signals + fixes in production terms.</div>
+            <div className="mt-1 text-xs text-muted">Detection signals and fixes described in production terms.</div>
           </div>
 
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <div className="text-xs text-muted">How to read</div>
-            <div className="mt-1 text-sm font-semibold text-fg">Detection → RCA → Fix</div>
-            <div className="mt-1 text-xs text-muted">Prevention is the “permanent change” section.</div>
+            <div className="mt-1 text-sm font-semibold text-fg">Detection → Root cause → Fix</div>
+            <div className="mt-1 text-xs text-muted">Prevention measures are the permanent changes section.</div>
           </div>
 
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
@@ -113,7 +113,7 @@ export default function PostmortemsPage() {
               <Badge tone="warn">SEV-2</Badge>
               <Badge tone="good">SEV-3</Badge>
             </div>
-            <div className="mt-1 text-xs text-muted">Severity reflects user impact + time-sensitivity.</div>
+            <div className="mt-1 text-xs text-muted">Severity reflects user impact and time-sensitivity.</div>
           </div>
         </div>
       </header>
@@ -170,8 +170,8 @@ export default function PostmortemsPage() {
       </section>
 
       <div className="rounded-3xl border border-border/70 bg-card/70 p-5 text-xs text-muted shadow-soft backdrop-blur">
-        Note: examples are written without proprietary details. The goal is to demonstrate operational maturity:
-        budgets, safe rollouts, instrumentation, and recurrence prevention.
+        Note: Examples are written without proprietary details. The goal is to demonstrate operational maturity:
+        error budgets, safe rollouts, instrumentation, and recurrence prevention.
       </div>
     </div>
   );

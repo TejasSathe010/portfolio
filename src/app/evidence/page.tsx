@@ -50,7 +50,7 @@ function ExternalCard({ title, href }: { title: string; href: string }) {
 
         <CardContent className="flex items-center justify-between">
           <div className="text-sm text-muted">
-            Audits / reports / receipts
+            Performance audits, reports, and documentation
           </div>
           <div className="text-sm font-semibold text-fg/70">→</div>
         </CardContent>
@@ -65,33 +65,32 @@ export default function EvidencePage() {
       <header className="space-y-3">
         <div className="inline-flex items-center gap-2 rounded-2xl border border-border/70 bg-card/70 px-3 py-2 text-xs text-fg/70 shadow-soft backdrop-blur">
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-brand to-brand2" />
-          Receipts-first • observability • performance signals
+          Proof-first • observability • performance signals
         </div>
 
         <h1 className="text-3xl font-semibold tracking-tight text-fg">Evidence</h1>
 
         <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted">
-          This page holds the proof: audits, live vitals, and artifacts. The rest of the portfolio stays clean—
-          this is where depth lives.
+          This page contains the proof: performance audits, live Web Vitals, and supporting artifacts. The rest of the portfolio stays focused—this is where you&apos;ll find the detailed evidence.
         </p>
 
         <div className="grid gap-3 md:grid-cols-3">
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <div className="text-xs text-muted">What you can verify</div>
-            <div className="mt-1 text-sm font-semibold text-fg">Performance + stability</div>
-            <div className="mt-1 text-xs text-muted">Core Web Vitals and lab audits, without narrative clutter.</div>
+            <div className="mt-1 text-sm font-semibold text-fg">Performance and stability</div>
+            <div className="mt-1 text-xs text-muted">Core Web Vitals and lab audits, presented clearly without clutter.</div>
           </div>
 
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <div className="text-xs text-muted">How to use</div>
             <div className="mt-1 text-sm font-semibold text-fg">Optional deep dive</div>
-            <div className="mt-1 text-xs text-muted">Scan links first, then check live signals if needed.</div>
+            <div className="mt-1 text-xs text-muted">Browse the links first, then check live signals if you need more detail.</div>
           </div>
 
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <div className="text-xs text-muted">Best practice</div>
-            <div className="mt-1 text-sm font-semibold text-fg">Trust by artifacts</div>
-            <div className="mt-1 text-xs text-muted">Evidence complements case studies, not replaces them.</div>
+            <div className="mt-1 text-sm font-semibold text-fg">Trust through artifacts</div>
+            <div className="mt-1 text-xs text-muted">Evidence complements the case studies—it doesn&apos;t replace the narrative.</div>
           </div>
         </div>
       </header>
@@ -102,7 +101,7 @@ export default function EvidencePage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-fg">Artifacts</h2>
-            <p className="mt-1 text-sm text-muted">Audits, reports, and supporting links.</p>
+            <p className="mt-1 text-sm text-muted">Performance audits, reports, and supporting documentation.</p>
           </div>
           <div className="text-sm text-fg/70">Open ↗</div>
         </div>
@@ -118,8 +117,8 @@ export default function EvidencePage() {
 
       <section className="space-y-3" aria-label="Live evidence">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-fg">Live signals</h2>
-          <p className="mt-1 text-sm text-muted">Vitals + lab + field data. Copy a snapshot if you want shareable proof.</p>
+            <h2 className="text-xl font-semibold tracking-tight text-fg">Live signals</h2>
+            <p className="mt-1 text-sm text-muted">Web Vitals, lab audits, and field performance data. Capture a snapshot if you need shareable proof.</p>
         </div>
 
         {/* compact = no duplicate heading inside */}

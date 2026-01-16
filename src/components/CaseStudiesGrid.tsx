@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { caseStudies } from "@/lib/content";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
 import { useIntent } from "@/components/IntentProvider";
@@ -290,19 +291,19 @@ export function CaseStudiesGrid() {
   const showClearAll = Boolean(q || activeTag);
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-3xl border border-border/70 bg-card/70 p-4 shadow-soft backdrop-blur">
-        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-1">
+      <div className="space-y-6">
+        <div className="rounded-lg border border-border bg-surface p-5 sm:p-6 shadow-sm">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <div className="text-sm font-semibold text-fg">Find a case study</div>
-              <span className="rounded-full border border-border/70 bg-card/60 px-3 py-1 text-[11px] font-semibold text-fg/70">
+                <span className="rounded-full border border-border bg-surface px-3 py-1 text-[11px] font-semibold text-fg/80 leading-5">
                 {intent === "RECRUITER" ? "Recruiter lens" : "Hiring manager lens"}
               </span>
             </div>
-            <div className="text-xs text-muted">
-              Press <span className="font-mono text-fg/80">/</span> to focus •{" "}
-              <span className="font-mono text-fg/80">Esc</span> to clear •{" "}
+              <div className="text-xs text-fg/80 leading-6">
+                Press <span className="font-mono text-fg">/</span> to focus •{" "}
+                <span className="font-mono text-fg">Esc</span> to clear •{" "}
               <span className="text-fg/70">{lensHint}</span>
             </div>
           </div>
@@ -314,16 +315,16 @@ export function CaseStudiesGrid() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search by keyword, tag, system, or outcome…"
-                className="w-full md:w-[420px] rounded-2xl border border-border/70 bg-card/60 px-4 py-2.5 pr-10 text-sm outline-none
-                           focus-visible:ring-4 focus-visible:ring-brand/20"
+                className="w-full md:w-[420px] rounded-md border border-border bg-surface px-4 py-2.5 pr-10 text-sm outline-none
+                           focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Search case studies"
               />
               {q ? (
                 <button
                   type="button"
                   onClick={() => setQ("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border border-border/70 bg-card/60 px-2 py-1 text-xs font-semibold text-fg/70
-                             hover:text-fg hover:bg-fg/[0.03]"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs font-semibold text-fg/70
+                             hover:text-fg hover:bg-surface-2 transition-all duration-180"
                   aria-label="Clear search"
                   title="Clear"
                 >
@@ -340,8 +341,8 @@ export function CaseStudiesGrid() {
                 id="cs-sort"
                 value={sort}
                 onChange={(e) => setSort(coerceSort(e.target.value))}
-                className="min-h-[40px] rounded-2xl border border-border/70 bg-card/60 px-3 text-sm text-fg outline-none
-                           focus-visible:ring-4 focus-visible:ring-brand/20"
+                className="min-h-[44px] rounded-md border border-border bg-surface px-3 text-sm text-fg outline-none
+                           focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Sort case studies"
               >
                 <option value="recommended">Recommended</option>
@@ -360,8 +361,8 @@ export function CaseStudiesGrid() {
                   setSort("recommended");
                   inputRef.current?.focus();
                 }}
-                className="min-h-[40px] rounded-2xl border border-border/70 bg-card/60 px-3 text-xs font-semibold text-fg/70
-                           hover:text-fg hover:bg-fg/[0.03]"
+                className="min-h-[44px] rounded-md border border-border bg-surface px-3 text-xs font-semibold text-fg/70
+                           hover:text-fg hover:bg-surface-2 hover:border-border-accent transition-all duration-180"
               >
                 Clear all
               </button>
@@ -369,16 +370,16 @@ export function CaseStudiesGrid() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setActiveTag(null)}
-            className={[
-              "rounded-full border px-3 py-1 text-[11px] font-semibold transition",
+            className={cn(
+              "rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-180 leading-5",
               !activeTag
-                ? "border-border/70 bg-gradient-to-r from-brand/[0.14] to-brand2/[0.12] text-fg"
-                : "border-border/70 bg-card/60 text-fg/70 hover:text-fg hover:bg-fg/[0.03]"
-            ].join(" ")}
+                ? "border-accent/40 bg-accent-tint/10 text-fg"
+                : "border-border bg-surface text-fg/70 hover:text-fg hover:bg-accent2-tint/5 hover:border-accent2/30"
+            )}
             aria-pressed={!activeTag}
           >
             All
@@ -391,12 +392,12 @@ export function CaseStudiesGrid() {
                 key={t}
                 type="button"
                 onClick={() => setActiveTag(on ? null : t)}
-                className={[
-                  "rounded-full border px-3 py-1 text-[11px] font-semibold transition",
+                className={cn(
+                  "rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-180 leading-5",
                   on
-                    ? "border-border/70 bg-gradient-to-r from-brand/[0.14] to-brand2/[0.12] text-fg"
-                    : "border-border/70 bg-card/60 text-fg/70 hover:text-fg hover:bg-fg/[0.03]"
-                ].join(" ")}
+                    ? "border-accent/40 bg-accent-tint/10 text-fg"
+                    : "border-border bg-surface text-fg/70 hover:text-fg hover:bg-accent2-tint/5 hover:border-accent2/30"
+                )}
                 aria-pressed={on}
               >
                 {t}
@@ -404,14 +405,14 @@ export function CaseStudiesGrid() {
             );
           })}
 
-          <div className="ml-auto text-xs text-muted">
-            <span className="font-semibold text-fg/80">{filtered.length}</span> results •{" "}
+          <div className="ml-auto text-xs text-fg/60 leading-6">
+            <span className="font-semibold text-fg">{filtered.length}</span> results •{" "}
             <span className="text-fg/70">{activeLabel}</span>
           </div>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 items-stretch [grid-auto-rows:1fr]">
+      <div className="grid gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 items-stretch [grid-auto-rows:1fr]">
         {filtered.map((c) => (
           <CaseStudyCard
             key={c.slug}

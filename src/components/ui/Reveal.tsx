@@ -7,9 +7,12 @@ import { cn } from "@/lib/utils";
 type Props = {
   children: React.ReactNode;
   className?: string;
-  delayMs?: number;          // stagger
-  once?: boolean;            // default true
-  rootMargin?: string;       // start slightly before entering viewport
+  /** Stagger delay in ms (default 70ms per item for smooth cascade) */
+  delayMs?: number;
+  /** Only animate once (default true) */
+  once?: boolean;
+  /** IntersectionObserver root margin */
+  rootMargin?: string;
 };
 
 export function Reveal({

@@ -98,46 +98,49 @@ export function TelemetryOverlay() {
       role="dialog"
       aria-label="Live metrics overlay"
       className={cn(
-        "fixed bottom-4 right-4 z-[9999] w-[360px]",
-        "rounded-3xl border border-border/70 bg-card/80 shadow-lift backdrop-blur"
+        "fixed bottom-4 right-4 z-[9999] w-[380px] max-w-[calc(100vw-2rem)]",
+        "rounded-lg border border-border bg-surface shadow-lg backdrop-blur-sm"
       )}
     >
-      <div className="flex items-center justify-between border-b border-border/70 p-4">
+      <div className="flex items-center justify-between border-b border-border p-4 bg-gradient-to-r from-accent-tint/5 to-accent2-tint/5">
         <div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-accent2 animate-pulse" />
           <div className="text-sm font-semibold text-fg">Live metrics</div>
-          <div className="text-xs text-muted">Shift + D to toggle</div>
+          </div>
+          <div className="text-xs text-fg/60 mt-0.5">Shift + D to toggle</div>
         </div>
 
         <button
-          className="rounded-2xl border border-border/70 bg-card/60 px-3 py-1.5 text-xs font-semibold text-fg/70 hover:text-fg hover:bg-fg/[0.03]"
+          className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-fg/70 hover:text-fg hover:bg-surface-2 hover:border-accent/30 transition-all duration-180"
           onClick={() => setOpen(false)}
         >
           Close
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 p-4 text-xs">
-        <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
-          <div className="text-[11px] text-muted">JS (approx)</div>
-          <div className="mt-1 font-mono text-fg">{kb(jsBytes)}</div>
+      <div className="grid grid-cols-2 gap-3 p-4">
+        <div className="rounded-md border border-accent2/20 bg-accent2-tint/5 p-3">
+          <div className="text-[11px] text-fg/60 font-medium">JS (approx)</div>
+          <div className="mt-1.5 font-mono text-sm font-semibold text-fg">{kb(jsBytes)}</div>
         </div>
-        <div className="rounded-2xl border border-border/70 bg-card/60 p-3">
-          <div className="text-[11px] text-muted">CSS (approx)</div>
-          <div className="mt-1 font-mono text-fg">{kb(cssBytes)}</div>
+        <div className="rounded-md border border-accent2/20 bg-accent2-tint/5 p-3">
+          <div className="text-[11px] text-fg/60 font-medium">CSS (approx)</div>
+          <div className="mt-1.5 font-mono text-sm font-semibold text-fg">{kb(cssBytes)}</div>
         </div>
-        <div className="col-span-2 rounded-2xl border border-border/70 bg-card/60 p-3">
-          <div className="text-[11px] text-muted">Network</div>
-          <div className="mt-1 font-mono text-fg">{net || "unknown"}</div>
+        <div className="col-span-2 rounded-md border border-accent/20 bg-accent-tint/5 p-3">
+          <div className="text-[11px] text-fg/60 font-medium">Network</div>
+          <div className="mt-1.5 font-mono text-sm font-semibold text-fg">{net || "unknown"}</div>
         </div>
       </div>
 
       <div className="space-y-2 px-4 pb-4">
         {rows.map(([k, v]) => (
-          <div key={k} className="flex items-center justify-between rounded-2xl border border-border/70 bg-card/60 px-3 py-2">
+          <div key={k} className="flex items-center justify-between rounded-md border border-border bg-surface px-3 py-2.5 hover:border-accent/30 hover:bg-surface-2 transition-all duration-180">
             <div className="text-xs font-semibold text-fg">{k}</div>
             <div className="flex items-center gap-2">
               {v?.rating ? <Badge tone={toneForRating(v.rating)}>{v.rating}</Badge> : null}
-              <div className="w-[92px] text-right font-mono text-xs text-fg">
+              <div className="w-[100px] text-right font-mono text-xs font-semibold text-fg">
                 {v ? formatVital(k, v.value) : "—"}
               </div>
             </div>

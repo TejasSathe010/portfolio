@@ -124,34 +124,34 @@ export function IntentBanner() {
       ? {
           badge: "Tailored emphasis",
           title: "Fast, high-signal overview",
-          subtitle: "Written for quick scanning. Case studies add depth only where it matters. Evidence is optional.",
+          subtitle: "Designed for quick scanning. Case studies provide depth where it matters most. Evidence is available when you need it.",
           bullets: [
             "Start with the top two case studies for the clearest outcomes and scope.",
-            "Use Work for the fastest timeline scan and stack context.",
-            "Open Evidence only if you want receipts and live performance signals."
+            "Use Work for a quick timeline overview and technical stack context.",
+            "Open Evidence when you want performance proof and live signals."
           ],
           // On case-studies, these now *apply* useful states
           primary: { label: "Open recommended", href: csHref({ sort: "recommended" }) },
           secondary: { label: "Scan work", href: "/work" },
           asideTitle: "Quick filters",
-          asideLead: "One click to the strongest signal.",
-          asideBody: "These links set the Case Studies grid state (q/tag/sort) without extra UI friction.",
+          asideLead: "One click to the most relevant content.",
+          asideBody: "These links filter the case studies by topic, tag, or sort order for faster navigation.",
           filters: recruiterFilters
         }
       : {
           badge: "Tailored emphasis",
-          title: "Decision context + proof",
-          subtitle: "Emphasis on tradeoffs, rollout safety, and measurable reliability. Proof is where it belongs.",
+          title: "Decision context and proof",
+          subtitle: "Focus on tradeoffs, rollout safety, and measurable reliability. Supporting evidence is available when you need it.",
           bullets: [
             "Case studies explain constraints, design choices, and tradeoffs clearly and concretely.",
-            "Evidence shows performance signals (lab + live) and artifacts without cluttering the story.",
-            "Work provides supporting breadth and consistency across environments."
+            "Evidence provides performance signals (lab and live) and artifacts without cluttering the narrative.",
+            "Work demonstrates consistency and breadth across different environments."
           ],
           primary: { label: "Open recommended", href: csHref({ sort: "recommended" }) },
           secondary: { label: "Evidence", href: "/evidence" },
           asideTitle: "Quick filters",
-          asideLead: "Start with invariants, then verify.",
-          asideBody: "Use these to jump directly into tradeoffs / rollout safety / correctness patterns.",
+          asideLead: "Start with key patterns, then verify.",
+          asideBody: "Use these to jump directly to tradeoffs, rollout safety, and correctness patterns.",
           filters: hmFilters
         };
 

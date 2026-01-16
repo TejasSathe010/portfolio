@@ -1,34 +1,36 @@
 import { cn } from "@/lib/utils";
-import type * as React from "react";
+import type { HTMLAttributes } from "react";
 
-type Tone = "neutral" | "good" | "bad" | "warn";
+type Tone = "neutral" | "good" | "bad" | "warn" | "primary" | "secondary" | "warm";
 
-export function Badge({
-  tone = "neutral",
-  children,
-  className
-}: {
+interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   tone?: Tone;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const tones = {
-    neutral: "border-border/70 bg-card/60 text-fg/70",
-    good: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
-    bad: "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-200",
-    warn: "border-amber-500/20 bg-amber-500/10 text-amber-800 dark:text-amber-200"
-  } satisfies Record<Tone, string>;
+}
 
+const tones = {
+  neutral: "border-border bg-surface-2 text-muted",
+  good: "border-emerald-500/20 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
+  bad: "border-red-500/20 bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300",
+  warn: "border-amber-500/20 bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
+  /* Section-themed chips */
+  primary: "border-primary/20 bg-primary-tint/8 text-primary",
+  secondary: "border-secondary/20 bg-secondary-tint/8 text-secondary",
+  warm: "border-warm/20 bg-warm-tint/6 text-warm"
+} satisfies Record<Tone, string>;
+
+export function Badge({ className, tone = "neutral", ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex select-none items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none",
-        "shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]",
+        /* Base: consistent padding + typography */
+        "inline-flex items-center rounded-r-chip border px-2.5 py-1 text-xs font-medium",
+        /* Buttery transitions */
+        "transition-all duration-med ease-out",
+        /* Tone */
         tones[tone],
         className
       )}
-    >
-      {children}
-    </span>
+      {...props}
+    />
   );
 }

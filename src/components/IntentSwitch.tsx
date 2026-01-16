@@ -73,8 +73,8 @@ export function IntentSwitch() {
               tabIndex={active ? 0 : -1}
               className={cn(
                 "relative z-10 flex-1 rounded-xl px-3 py-2 text-xs font-semibold",
-                "min-h-[40px] transition focus-visible:outline-none",
-                "after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:opacity-0 after:transition",
+                "min-h-[44px] transition-colors duration-200 focus-visible:outline-none",
+                "after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:opacity-0 after:transition-opacity after:duration-200",
                 "hover:after:opacity-100 active:after:opacity-100",
                 active
                   ? "text-white after:bg-white/[0.10] active:after:bg-white/[0.14]"

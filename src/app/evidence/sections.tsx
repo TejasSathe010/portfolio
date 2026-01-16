@@ -217,7 +217,7 @@ export function EvidenceClient({
 
               <Link
                 href="/console"
-                className="inline-flex min-h-[40px] items-center rounded-2xl border border-border/70 bg-card/60 px-3 text-xs font-semibold text-fg/70 hover:text-fg hover:bg-fg/[0.03]"
+                className="inline-flex min-h-[44px] items-center rounded-2xl border border-border/70 bg-card/60 px-3 text-xs font-semibold text-fg/70 hover:text-fg hover:bg-fg/[0.03] transition-colors duration-200"
               >
                 Open console →
               </Link>

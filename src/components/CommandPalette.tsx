@@ -159,7 +159,7 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/30 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/40 p-4 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) close();
       }}
@@ -215,17 +215,19 @@ export function CommandPalette() {
     >
       <div
         ref={panelRef}
-        className="w-full max-w-xl overflow-hidden rounded-3xl border border-border/70 bg-card/80 shadow-lift backdrop-blur"
+        className="w-full max-w-xl overflow-hidden rounded-lg border border-border bg-surface shadow-lg backdrop-blur-sm animate-fade-in-up"
+        style={{ animationDuration: "200ms" }}
       >
-        <div className="border-b border-border/70 p-3">
+        <div className="border-b border-border p-6">
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Type a command or search…"
             className={cn(
-              "w-full rounded-2xl border border-border/70 bg-card/60 px-4 py-3 text-sm outline-none",
-              "focus-visible:ring-4 focus-visible:ring-brand/20"
+              "w-full rounded-md border border-border bg-surface-2 px-4 py-3 text-sm outline-none transition-all duration-180",
+              "placeholder:text-fg/50",
+              "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:border-accent"
             )}
             role="combobox"
             aria-autocomplete="list"
@@ -235,14 +237,14 @@ export function CommandPalette() {
           />
         </div>
 
-        <div className="max-h-[380px] overflow-auto p-2">
+        <div className="max-h-[420px] overflow-auto p-4">
           {filteredFlat.length === 0 ? (
-            <div className="p-4 text-sm text-muted">No results.</div>
+            <div className="py-8 text-center text-sm text-fg/80 leading-7">No results found.</div>
           ) : (
-            <div id={listboxId} role="listbox" aria-label="Results" className="space-y-2">
+            <div id={listboxId} role="listbox" aria-label="Results" className="space-y-4">
               {grouped.map((g) => (
-                <div key={g.group} className="space-y-1">
-                  <div className="px-3 pt-2 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                <div key={g.group} className="space-y-2">
+                  <div className="px-2 text-xs font-semibold uppercase tracking-wider text-fg/60">
                     {g.group}
                   </div>
 
@@ -261,16 +263,14 @@ export function CommandPalette() {
                           onMouseEnter={() => setSelectedIndex(idx)}
                           onClick={() => run(it)}
                           className={cn(
-                            "relative flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm transition",
-                            // state layer
-                            "after:pointer-events-none after:absolute after:inset-0 after:rounded-2xl after:opacity-0 after:transition",
+                            "relative flex w-full items-center justify-between rounded-md px-4 py-3 text-left text-sm transition-all duration-180",
                             active
-                              ? "bg-gradient-to-r from-brand/[0.14] to-brand2/[0.12] text-fg after:bg-fg/[0.02]"
-                              : "text-fg/80 hover:after:opacity-100 after:bg-fg/[0.04]"
+                              ? "bg-accent/10 text-fg border border-accent/20"
+                              : "text-fg/80 hover:bg-surface-2 hover:text-fg border border-transparent"
                           )}
                         >
                           <span className="font-semibold">{it.label}</span>
-                          {it.hint ? <span className="text-xs text-muted">{it.hint}</span> : null}
+                          {it.hint ? <span className="text-xs text-fg/60">{it.hint}</span> : null}
                         </button>
                       );
                     })}
@@ -281,10 +281,28 @@ export function CommandPalette() {
           )}
         </div>
 
-        <div className="border-t border-border/70 px-4 py-3 text-xs text-muted">
-          <span className="font-mono">↑</span>/<span className="font-mono">↓</span> navigate •{" "}
-          <span className="font-mono">Enter</span> open • <span className="font-mono">Esc</span> close •{" "}
-          <span className="font-mono">⌘K</span>/<span className="font-mono">Ctrl+K</span> toggle
+        <div className="border-t border-border px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-fg/60 leading-6">
+            <span className="flex items-center gap-1">
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">↑</kbd>
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">↓</kbd>
+              <span>navigate</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">Enter</kbd>
+              <span>open</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">Esc</kbd>
+              <span>close</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">⌘K</kbd>
+              <span>/</span>
+              <kbd className="rounded-sm border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px] font-semibold">Ctrl+K</kbd>
+              <span>toggle</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -10,46 +9,6 @@ import { site } from "@/lib/site";
 
 function isActivePath(pathname: string, href: string) {
   return pathname === href || (href !== "/" && pathname.startsWith(href));
-}
-
-function NavLink({
-  href,
-  label,
-  pathname,
-  onNavigate,
-  role
-}: {
-  href: string;
-  label: string;
-  pathname: string;
-  onNavigate?: () => void;
-  role?: "menuitem" | undefined;
-}) {
-  const active = isActivePath(pathname, href);
-
-  return (
-    <Link
-      href={href}
-      onClick={onNavigate}
-      aria-current={active ? "page" : undefined}
-      role={role}
-      className={cn(
-        "relative inline-flex min-h-[40px] items-center rounded-xl px-3 py-2 text-sm font-medium transition",
-        // Material-ish state layer
-        "after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:opacity-0 after:transition",
-        "after:bg-fg/[0.05] hover:after:opacity-100 active:after:bg-fg/[0.08]",
-        active ? "text-fg" : "text-fg/70 hover:text-fg"
-      )}
-    >
-      {label}
-      {active && (
-        <span
-          aria-hidden="true"
-          className="absolute -bottom-1 left-3 right-3 h-[2px] rounded-full bg-gradient-to-r from-brand via-brand2 to-brand3"
-        />
-      )}
-    </Link>
-  );
 }
 
 export function Header() {
@@ -66,7 +25,7 @@ export function Header() {
   );
 
   const [open, setOpen] = useState(false);
-  const [elevated, setElevated] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -75,19 +34,27 @@ export function Header() {
   const menuId = "mobile-nav-panel";
 
   useEffect(() => {
-    // Close on route change
     setOpen(false);
   }, [pathname]);
 
-  // Elevation on scroll (subtle “app bar” feel)
   useEffect(() => {
-    const onScroll = () => setElevated(window.scrollY > 2);
+    const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Outside click + Escape to close
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
@@ -108,13 +75,11 @@ export function Header() {
     };
   }, [open]);
 
-  // Focus management for the mobile popover
   useEffect(() => {
     if (open) {
       const t = window.setTimeout(() => firstItemRef.current?.focus(), 0);
       return () => window.clearTimeout(t);
     } else {
-      // restore focus to the menu button when closing
       buttonRef.current?.focus?.();
     }
   }, [open]);
@@ -124,66 +89,138 @@ export function Header() {
       <header
         id="top"
         className={cn(
-          "sticky top-0 z-50 border-b border-border/60 bg-card/60 backdrop-blur",
-          elevated ? "shadow-soft" : "shadow-none"
+          "fixed top-0 left-0 right-0 z-50",
+          "transition-all duration-med ease-out"
         )}
       >
-        {/* Skip link (keyboard users) */}
+        <div
+          className={cn(
+            "absolute inset-0 transition-all duration-med ease-out",
+            "bg-surface/95 backdrop-blur-md",
+            "border-b border-border",
+            scrolled && "border-border2 shadow-sm"
+          )}
+        />
+
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 h-[1px]",
+            "bg-gradient-to-r from-transparent via-primary/50 to-transparent",
+            "transition-opacity duration-med ease-out",
+            scrolled ? "opacity-100" : "opacity-0"
+          )}
+        />
+
+        <div
+          className={cn(
+            "absolute top-0 left-0 right-0 h-[1px]",
+            "bg-gradient-to-r from-transparent via-white/30 to-transparent",
+            "pointer-events-none"
+          )}
+        />
+
         <a
           href="#content"
-          className={cn(
-            "sr-only focus:not-sr-only",
-            "absolute left-4 top-2 z-[60] rounded-xl bg-card px-3 py-2 text-sm font-semibold text-fg shadow-soft",
-            "border border-border/70"
-          )}
+          className="sr-only focus:not-sr-only absolute left-4 top-3 z-[60] rounded-r-btn bg-surface px-4 py-2 text-sm font-semibold shadow-lg border border-border"
         >
           Skip to content
         </a>
 
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
+        <div
+          className={cn(
+            "relative mx-auto flex w-full max-w-container items-center justify-between",
+            "px-4 sm:px-6 lg:px-8",
+            "transition-all duration-med ease-out",
+            "h-16 sm:h-20"
+          )}
+        >
           <Link
             href="/"
             className={cn(
-              "group inline-flex items-center gap-3 rounded-2xl",
-              "after:pointer-events-none after:absolute after:inset-0 after:rounded-2xl after:opacity-0 after:transition",
-              "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/15"
+              "group relative flex items-center gap-2.5 sm:gap-3 rounded-xl",
+              "transition-all duration-fast ease-out",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             )}
             aria-label={`${site.name} — Home`}
           >
-            <span className="relative grid h-9 w-9 place-items-center rounded-2xl text-white shadow-soft">
-              <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-brand via-brand2 to-brand3" />
-              <span className="relative font-semibold">
+            <div
+              className={cn(
+                "relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl shrink-0",
+                "bg-gradient-to-br from-primary via-primary to-secondary",
+                "shadow-sm",
+                "transition-all duration-fast ease-out",
+                "group-hover:shadow-md group-hover:shadow-primary/20 group-hover:scale-[1.02]"
+              )}
+            >
+              <span className="font-bold text-white text-xs leading-none">
                 {site.name
                   .split(" ")
                   .map((s) => s[0])
                   .join("")
                   .slice(0, 2)}
               </span>
-            </span>
-            <div className="leading-tight">
-              <div className="text-sm font-semibold text-fg">{site.name}</div>
-              <div className="hidden text-xs text-muted sm:block">{site.tagline}</div>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-med ease-out" />
+            </div>
+
+            <div className="flex flex-col leading-tight min-w-0">
+              <span
+                className={cn(
+                  "text-sm font-semibold truncate",
+                  "text-fg",
+                  "group-hover:text-primary",
+                  "transition-colors duration-fast ease-out"
+                )}
+              >
+                {site.name}
+              </span>
+              <span className="hidden sm:block text-[10px] text-muted leading-tight truncate">
+                {site.tagline}
+              </span>
             </div>
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-            {links.map((l) => (
-              <NavLink key={l.href} href={l.href} label={l.label} pathname={pathname} />
-            ))}
+          <nav className="hidden md:flex items-center gap-0.5" aria-label="Primary">
+            {links.map((l) => {
+              const active = isActivePath(pathname, l.href);
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "relative px-3 py-2 text-sm font-medium rounded-lg",
+                    "transition-all duration-fast ease-out",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+                    active
+                      ? "text-primary"
+                      : "text-muted hover:text-fg hover:bg-surface-2"
+                  )}
+                >
+                  {l.label}
+                  {active && (
+                    <span className="absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-primary to-secondary" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center gap-2">
-            {/* Mobile menu button */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <IntentSwitch />
+            </div>
+
             <button
               ref={buttonRef}
               type="button"
               className={cn(
                 "md:hidden",
-                "inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl border border-border/70 bg-card/70 px-3 text-sm font-semibold text-fg",
-                "shadow-soft transition",
-                "hover:bg-fg/[0.03] active:bg-fg/[0.06]",
-                "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/15"
+                "relative flex h-10 w-10 items-center justify-center rounded-lg",
+                "bg-surface border border-border",
+                "transition-all duration-fast ease-out",
+                "hover:bg-surface-2 hover:border-primary/20",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+                open && "bg-surface-2 border-primary/30"
               )}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-haspopup="menu"
@@ -191,55 +228,147 @@ export function Header() {
               aria-controls={menuId}
               onClick={() => setOpen((v) => !v)}
             >
-              <span aria-hidden="true" className="text-base leading-none">
-                {open ? "×" : "≡"}
-              </span>
-              <span className="text-sm">Menu</span>
+              <div className="relative w-5 h-5">
+                <span
+                  className={cn(
+                    "absolute left-0 h-0.5 w-5 rounded-full bg-fg/70",
+                    "transition-all duration-med ease-out",
+                    open ? "top-[9px] rotate-45" : "top-[4px]"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute left-0 top-[9px] h-0.5 w-5 rounded-full bg-fg/70",
+                    "transition-all duration-med ease-out",
+                    open ? "opacity-0 scale-0" : "opacity-100"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute left-0 h-0.5 w-5 rounded-full bg-fg/70",
+                    "transition-all duration-med ease-out",
+                    open ? "top-[9px] -rotate-45" : "top-[14px]"
+                  )}
+                />
+              </div>
             </button>
-
-            <IntentSwitch />
           </div>
         </div>
-
-        {/* Mobile menu panel */}
-        {open && (
-          <div className="md:hidden">
-            <div
-              ref={panelRef}
-              id={menuId}
-              role="menu"
-              aria-label="Mobile navigation"
-              className={cn("mx-auto w-full max-w-6xl px-4 pb-3", "motion-safe:animate-fade-up")}
-            >
-              <div className="rounded-2xl border border-border/70 bg-card/80 shadow-soft backdrop-blur">
-                <div className="flex flex-col p-2">
-                  {links.map((l, idx) => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      ref={idx === 0 ? (el) => { firstItemRef.current = el; } : undefined}
-                      role="menuitem"
-                      onClick={() => setOpen(false)}
-                      aria-current={isActivePath(pathname, l.href) ? "page" : undefined}
-                      className={cn(
-                        "relative inline-flex min-h-[40px] items-center rounded-xl px-3 py-2 text-sm font-medium transition",
-                        "after:pointer-events-none after:absolute after:inset-0 after:rounded-xl after:opacity-0 after:transition",
-                        "after:bg-fg/[0.05] hover:after:opacity-100 active:after:bg-fg/[0.08]",
-                        isActivePath(pathname, l.href) ? "text-fg" : "text-fg/70 hover:text-fg",
-                        "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/15"
-                      )}
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
-      {/* Real skip target (so #content always exists without touching layout.tsx) */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 md:hidden",
+          "transition-all duration-med ease-out",
+          open
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        )}
+      >
+        <div
+          className="absolute inset-0 bg-fg/10 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        />
+
+        <div
+          ref={panelRef}
+          id={menuId}
+          role="menu"
+          aria-label="Mobile navigation"
+          className={cn(
+            "absolute top-0 right-0 h-full w-full max-w-sm",
+            "bg-surface border-l border-border",
+            "shadow-lg",
+            "transition-transform duration-med ease-out",
+            "flex flex-col",
+            open ? "translate-x-0" : "translate-x-full"
+          )}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <span className="text-sm font-semibold text-fg">Navigation</span>
+            <button
+              onClick={() => setOpen(false)}
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-lg",
+                "text-muted hover:text-fg hover:bg-surface-2",
+                "transition-colors duration-fast ease-out",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+              )}
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5 icon-nav" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <nav className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-1">
+              {links.map((l, idx) => {
+                const active = isActivePath(pathname, l.href);
+                return (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    ref={idx === 0 ? (el) => { firstItemRef.current = el; } : undefined}
+                    role="menuitem"
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3.5 rounded-xl min-h-[44px]",
+                      "text-base font-medium",
+                      "transition-all duration-fast ease-out",
+                      active
+                        ? "bg-primary-tint/10 text-primary border border-primary/20"
+                        : "text-muted hover:text-fg hover:bg-surface-2 border border-transparent",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+                    )}
+                  >
+                    {active && (
+                      <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-secondary shrink-0" />
+                    )}
+                    {l.label}
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="my-6 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+            <div className="sm:hidden">
+              <div className="text-xs font-medium text-muted mb-3 px-4">
+                Viewing mode
+              </div>
+              <IntentSwitch />
+            </div>
+          </nav>
+
+          <div className="p-4 border-t border-border">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className={cn(
+                "flex w-full items-center justify-center gap-2 px-6 py-3.5 rounded-xl min-h-[44px]",
+                "text-sm font-semibold text-white",
+                "bg-gradient-to-r from-primary to-secondary",
+                "shadow-sm",
+                "transition-all duration-fast ease-out",
+                "hover:shadow-md hover:shadow-primary/20 motion-safe:hover:-translate-y-0.5",
+                "active:scale-[0.98]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2"
+              )}
+            >
+              Go to Home
+              <svg className="w-4 h-4 icon-inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-16 sm:h-20" />
+
       <div id="content" tabIndex={-1} className="sr-only" />
     </>
   );

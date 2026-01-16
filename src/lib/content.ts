@@ -27,7 +27,7 @@ export type CaseStudy = {
 };
 
 export const professionalSummary =
-  "Software Engineer building distributed services with Python, React, Node.js, and AWS, delivering sub-300ms p95 latency and 99.99% uptime across high-throughput, globally deployed environments.";
+  "Software Engineer building distributed services with Java, React, Node.js, Python, and AWS, delivering sub-300ms p95 latency and 99.99% uptime across high-throughput, globally deployed environments.";
 
 export const signatureMetrics = [
   { label: "Latency", value: "Sub-300ms p95" },
@@ -406,7 +406,7 @@ export const projects: ProjectItem[] = [
     name: "Redix",
     stack: ["Golang", "Raft", "LSM-tree", "Redis Protocol", "Clustering", "WAL"],
     timeframe: "Aug 2024 – Apr 2025",
-    links: [{ label: "GitHub", href: "#" }],
+    links: [{ label: "GitHub", href: "https://github.com/TejasSathe010/Redix-A-modern-twist-on-Redis" }],
     bullets: [
       "Built a Golang RESP-compliant KV store achieving 100k writes/s and 10ms p99 using Raft consensus and LSM-tree storage.",
       "Implemented Write-Ahead Logging and memory-mapped files to guarantee persistence with high concurrency across nodes."
@@ -415,7 +415,10 @@ export const projects: ProjectItem[] = [
   {
     name: "Aegis Runtime",
     stack: ["Node.js", "NPM", "OpenTelemetry", "LLM", "Middleware"],
-    links: [{ label: "NPM Package", href: "#" }],
+    links: [
+      { label: "NPM Package", href: "https://www.npmjs.com/package/@aegis-runtime/core" },
+      { label: "GitHub", href: "https://github.com/TejasSathe010/Aegis-Runtime" }
+    ],
     bullets: [
       "Developed NPM middleware for LLM governance that enforced token budgets and AuthZ with OTel hooks.",
       "Implemented an interceptor pattern to analyze payloads and prevent unauthorized usage, with detailed traces for cost-saving and compliance."
@@ -424,7 +427,7 @@ export const projects: ProjectItem[] = [
   {
     name: "TokenThrifty",
     stack: ["Node.js", "TF-IDF", "LLM", "Compression", "OpenAI API"],
-    links: [{ label: "GitHub", href: "#" }],
+    links: [{ label: "Live", href: "https://tejas-sathe-portfolio.netlify.app/token-thrifty" }],
     bullets: [
       "Reduced LLM cost 70% for 60 users by using TF-IDF compression and request interception.",
       "Built a pre-processor that pruned redundant context from prompts before API calls, dynamically adjusting ratios to preserve critical instructions."
@@ -434,8 +437,8 @@ export const projects: ProjectItem[] = [
     name: "TechLitHub",
     stack: ["React", "Node.js", "MongoDB", "AWS", "Redis", "TensorFlow"],
     links: [
-      { label: "GitHub", href: "#" },
-      { label: "Live", href: "#" }
+      { label: "GitHub", href: "https://github.com/TejasSathe010/TechLitHub" },
+      { label: "Live", href: "https://techlithub.netlify.app/" }
     ],
     bullets: [
       "Constructed full-stack blog system ingesting 20+ posts/sec with sub-1s FMP.",

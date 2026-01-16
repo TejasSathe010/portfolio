@@ -222,7 +222,7 @@ function CanvasInner({
         const x = startX + depth * colSpacing;
         const y = nodeCount === 1 ? centerY : offsetY + idx * rowSpacing;
         map.set(n.id, { x, y });
-      });
+    });
     });
     
     return map;

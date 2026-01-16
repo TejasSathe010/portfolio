@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <IntentProvider>
           <Header />
           {/* a11y anchor for skip-to-content */}
-          <main id="content" className="mx-auto w-full max-w-6xl px-4 pb-14 pt-10">
+          <main id="content" className="mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8 pb-14 pt-10">
             {children}
           </main>
           <Footer />

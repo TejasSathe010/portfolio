@@ -60,9 +60,9 @@ function LinkButton({
         "shadow-soft motion-safe:hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0",
         "after:pointer-events-none after:absolute after:inset-0 after:rounded-2xl after:opacity-0 after:transition hover:after:opacity-100 active:after:opacity-100",
         variant === "primary" &&
-          "text-white bg-gradient-to-r from-brand via-brand2 to-brand3 after:bg-white/[0.10] active:after:bg-white/[0.14]",
+          "text-white bg-gradient-to-r from-accent to-accent2 after:bg-white/[0.10] active:after:bg-white/[0.14]",
         variant === "secondary" &&
-          "border border-border/70 bg-card/70 text-fg after:bg-fg/[0.05] active:after:bg-fg/[0.08]"
+          "border border-border bg-surface text-fg after:bg-fg/[0.05] active:after:bg-fg/[0.08]"
       )}
     >
       {children}
@@ -140,7 +140,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           {cs.tags.slice(0, 10).map((t) => (
             <span
               key={t}
-              className="rounded-full border border-border/70 bg-gradient-to-r from-brand/[0.10] to-brand2/[0.10] px-3 py-1 text-[11px] font-medium text-fg/80"
+              className="rounded-full border border-accent2/30 bg-gradient-to-r from-accent/[0.08] to-accent2/[0.06] px-3 py-1 text-[11px] font-medium text-fg/80"
             >
               {t}
             </span>
@@ -221,7 +221,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <ul className="space-y-2">
               {cs.highlights.map((h) => (
                 <li key={h} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-r from-brand to-brand2" />
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                   <span className="text-pretty">{h}</span>
                 </li>
               ))}
@@ -238,7 +238,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
           <ol className="space-y-3">
             {cs.approach.map((a, i) => (
               <li key={a} className="grid grid-cols-[28px,1fr] gap-3">
-                <div className="grid h-7 w-7 place-items-center rounded-xl border border-border/70 bg-card/60 text-xs font-semibold text-fg/70">
+                <div className="grid h-7 w-7 place-items-center rounded-md border border-border bg-surface text-xs font-semibold text-fg/70">
                   {i + 1}
                 </div>
                 <div className="leading-relaxed text-pretty break-words">{a}</div>
@@ -257,7 +257,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <ul className="space-y-2">
               {cs.architecture.map((a) => (
                 <li key={a} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-r from-brand to-brand2" />
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                   <span className="text-pretty">{a}</span>
                 </li>
               ))}
@@ -273,7 +273,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <ul className="space-y-2">
               {cs.outcomes.map((o) => (
                 <li key={o} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-r from-brand to-brand2" />
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                   <span className="text-pretty">{o}</span>
                 </li>
               ))}
@@ -303,31 +303,31 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
       {/* Prev / Next navigation */}
       <section aria-label="More case studies" className="grid gap-4 md:grid-cols-2">
         {prev ? (
-          <VTLink href={`/case-studies/${prev.slug}`} className="block">
-            <Card>
+          <Card interactive={false}>
+            <VTLink href={`/case-studies/${prev.slug}`} className="block h-full">
               <CardHeader>
-                <div className="text-xs text-muted">Previous</div>
+                <div className="text-xs text-fg/80">Previous</div>
                 <div className="mt-1 text-sm font-semibold text-fg line-clamp-2 break-words">{prev.title}</div>
-                <div className="mt-1 text-sm text-muted line-clamp-2 break-words">{prev.summary}</div>
+                <div className="mt-1 text-sm text-fg/80 leading-6 line-clamp-2 break-words">{prev.summary}</div>
               </CardHeader>
               <CardContent className="text-sm text-fg/70">Open →</CardContent>
+            </VTLink>
             </Card>
-          </VTLink>
         ) : (
           <div />
         )}
 
         {next ? (
-          <VTLink href={`/case-studies/${next.slug}`} className="block">
-            <Card>
+          <Card interactive={false}>
+            <VTLink href={`/case-studies/${next.slug}`} className="block h-full">
               <CardHeader>
-                <div className="text-xs text-muted">Next</div>
+                <div className="text-xs text-fg/80">Next</div>
                 <div className="mt-1 text-sm font-semibold text-fg line-clamp-2 break-words">{next.title}</div>
-                <div className="mt-1 text-sm text-muted line-clamp-2 break-words">{next.summary}</div>
+                <div className="mt-1 text-sm text-fg/80 leading-6 line-clamp-2 break-words">{next.summary}</div>
               </CardHeader>
               <CardContent className="text-sm text-fg/70">Open →</CardContent>
+            </VTLink>
             </Card>
-          </VTLink>
         ) : null}
       </section>
     </div>

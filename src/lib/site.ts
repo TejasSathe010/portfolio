@@ -3,7 +3,7 @@ export const site = {
   tagline: "Distributed services + frontend platforms. Fast under load. Proven by metrics.",
   url: process.env.SITE_URL ?? "http://localhost:3000",
   description:
-    "Software Engineer building distributed services with Python, React, Node.js, and AWS — performance, reliability, and receipts-first execution.",
+    "Software Engineer building distributed services with Java, React, Node.js, Python, and AWS — performance, reliability, and receipts-first execution.",
   location: "Tampa, Florida, United States",
   phone: "+1 786-561-4652",
   email: "tejassathe010@gmail.com",

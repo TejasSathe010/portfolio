@@ -225,7 +225,7 @@ export function EngineeringMode() {
                 key={k}
                 onClick={() => setTab(k)}
                 className={cn(
-                  "relative inline-flex min-h-[40px] items-center rounded-2xl px-3 text-sm font-semibold transition",
+                  "relative inline-flex min-h-[44px] items-center rounded-2xl px-3 text-sm font-semibold transition-colors duration-200",
                   "border border-border/70 bg-card/60",
                   "hover:bg-fg/[0.03]",
                   active && "text-fg",
