@@ -1,7 +1,24 @@
+import { Suspense } from "react";
 import { CaseStudiesGrid } from "@/components/CaseStudiesGrid";
 import { IntentBanner } from "@/components/IntentBanner";
 
 export const metadata = { title: "Case Studies" };
+
+function CaseStudiesGridSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="rounded-lg border border-border bg-surface p-5 sm:p-6 shadow-sm animate-pulse">
+        <div className="h-10 bg-fg/5 rounded-md w-1/3" />
+        <div className="mt-4 h-8 bg-fg/5 rounded-md w-2/3" />
+      </div>
+      <div className="grid gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-[320px] rounded-lg border border-border bg-surface animate-pulse" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function CaseStudiesPage() {
   return (
@@ -18,7 +35,9 @@ export default function CaseStudiesPage() {
 
       <IntentBanner />
 
-      <CaseStudiesGrid />
+      <Suspense fallback={<CaseStudiesGridSkeleton />}>
+        <CaseStudiesGrid />
+      </Suspense>
     </div>
   );
 }

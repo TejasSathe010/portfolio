@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import Script from "next/script";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { site } from "@/lib/site";
 import { IntentProvider } from "@/components/IntentProvider";
@@ -10,6 +11,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { VitalsReporter } from "@/components/telemetry/VitalsReporter";
 import { TelemetryOverlay } from "@/components/telemetry/TelemetryOverlay";
 import { StructuredData } from "@/components/StructuredData";
+import { AttributionCapture } from "@/components/AttributionCapture";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
@@ -45,6 +47,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <VitalsReporter />
           <TelemetryOverlay />
           <EngineeringMode />
+          <AttributionCapture />
+
+          {/* Cloudflare Web Analytics - production only, non-blocking */}
+          {process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
+            <Script
+              src="https://static.cloudflareinsights.com/beacon.min.js"
+              data-cf-beacon={`{"token": "${process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN}"}`}
+              strategy="afterInteractive"
+            />
+          )}
         </IntentProvider>
       </body>
     </html>

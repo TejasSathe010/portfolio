@@ -161,6 +161,51 @@ npm run build
 npm start
 ```
 
+## 📊 Analytics
+
+The portfolio includes privacy-first analytics using **Cloudflare Web Analytics**.
+
+### Features
+
+- **Page views, visitors, sessions** — automatically tracked
+- **Referrers & UTM attribution** — captured on first landing
+- **Top pages, geography, device type** — built into Cloudflare
+- **CTA & outbound clicks** — tracked via custom event layer (dev console logging)
+- **No cookies, no fingerprinting** — privacy-first
+
+### Setup
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com) → Web Analytics
+2. Add your site and get the analytics token
+3. Add to `.env.local`:
+   ```
+   NEXT_PUBLIC_CF_ANALYTICS_TOKEN="your-token-here"
+   ```
+
+### Adding Custom Events
+
+Use the analytics wrapper in your components:
+
+```tsx
+import { track, trackOutbound, trackCTA } from "@/lib/analytics";
+
+// Track generic event
+track("form_submit", { formId: "contact" });
+
+// Track outbound link click
+trackOutbound("https://github.com/...", "GitHub Profile");
+
+// Track CTA click
+trackCTA("Start Tour", "hero");
+```
+
+### Development
+
+- Analytics script only loads in production
+- Events log to console in development for debugging
+- All tracking is try/catch guarded and never breaks navigation
+
+
 ## 📖 Key Features Explained
 
 ### Interactive Architecture Canvas
