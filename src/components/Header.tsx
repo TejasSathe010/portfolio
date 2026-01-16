@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IntentSwitch } from "./IntentSwitch";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
@@ -30,6 +30,9 @@ export function Header() {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const firstItemRef = useRef<HTMLAnchorElement | null>(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
+  const indicatorRef = useRef<HTMLSpanElement | null>(null);
+  const activeLinkRef = useRef<HTMLElement | null>(null);
 
   const menuId = "mobile-nav-panel";
 
@@ -83,6 +86,58 @@ export function Header() {
       buttonRef.current?.focus?.();
     }
   }, [open]);
+
+  useLayoutEffect(() => {
+    const updateIndicator = (el: HTMLElement | null, opacity = 1) => {
+      if (!indicatorRef.current || !navRef.current || !el) {
+        if (indicatorRef.current) indicatorRef.current.style.opacity = "0";
+        return;
+      }
+      const navRect = navRef.current.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      const left = rect.left - navRect.left;
+      indicatorRef.current.style.width = `${rect.width}px`;
+      indicatorRef.current.style.transform = `translate3d(${left}px, 0, 0)`;
+      indicatorRef.current.style.opacity = `${opacity}`;
+    };
+
+    const updateActive = () => {
+      const active = navRef.current?.querySelector('[data-nav-link][aria-current="page"]') as HTMLElement | null;
+      activeLinkRef.current = active;
+      updateIndicator(active, 1);
+    };
+
+    updateActive();
+    window.addEventListener("resize", updateActive);
+    return () => window.removeEventListener("resize", updateActive);
+  }, [pathname]);
+
+  const handleIndicatorPreview = (el: HTMLElement | null) => {
+    if (!el) return;
+    if (indicatorRef.current && navRef.current) {
+      const navRect = navRef.current.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      const left = rect.left - navRect.left;
+      indicatorRef.current.style.width = `${rect.width}px`;
+      indicatorRef.current.style.transform = `translate3d(${left}px, 0, 0)`;
+      indicatorRef.current.style.opacity = "0.5";
+    }
+  };
+
+  const handleIndicatorReset = () => {
+    if (activeLinkRef.current) {
+      if (indicatorRef.current && navRef.current) {
+        const navRect = navRef.current.getBoundingClientRect();
+        const rect = activeLinkRef.current.getBoundingClientRect();
+        const left = rect.left - navRect.left;
+        indicatorRef.current.style.width = `${rect.width}px`;
+        indicatorRef.current.style.transform = `translate3d(${left}px, 0, 0)`;
+        indicatorRef.current.style.opacity = "1";
+      }
+    } else if (indicatorRef.current) {
+      indicatorRef.current.style.opacity = "0";
+    }
+  };
 
   return (
     <>
@@ -179,27 +234,48 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-0.5" aria-label="Primary">
+          <nav
+            ref={navRef}
+            className="hidden md:flex items-center gap-0.5 relative pb-2"
+            aria-label="Primary"
+            onMouseLeave={handleIndicatorReset}
+          >
+            <span
+              ref={indicatorRef}
+              aria-hidden="true"
+              className={cn(
+                "absolute -bottom-[1px] left-0 h-[2px] rounded-full z-20",
+                "bg-gradient-to-r from-primary to-secondary",
+                "opacity-0 transition-[transform,width,opacity] duration-med ease-out"
+              )}
+              style={{ width: 0, transform: "translate3d(0, 0, 0)" }}
+            />
             {links.map((l) => {
               const active = isActivePath(pathname, l.href);
               return (
                 <Link
                   key={l.href}
                   href={l.href}
+                  data-nav-link
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative px-3 py-2 text-sm font-medium rounded-lg",
+                    "relative px-3 py-2 text-sm font-medium rounded-lg group",
                     "transition-all duration-fast ease-out",
+                    "overflow-hidden",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
                     active
                       ? "text-primary"
-                      : "text-muted hover:text-fg hover:bg-surface-2"
+                      : "text-muted hover:text-fg"
                   )}
+                  onMouseEnter={(e) => handleIndicatorPreview(e.currentTarget)}
+                  onFocus={(e) => handleIndicatorPreview(e.currentTarget)}
+                  onBlur={handleIndicatorReset}
                 >
-                  {l.label}
-                  {active && (
-                    <span className="absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-primary to-secondary" />
-                  )}
+                  <span className="relative z-10">{l.label}</span>
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 z-0 rounded-lg bg-surface-2 opacity-0 transition-opacity duration-fast ease-out group-hover:opacity-100 group-focus-visible:opacity-100"
+                  />
                 </Link>
               );
             })}

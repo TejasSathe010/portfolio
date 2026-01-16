@@ -23,7 +23,7 @@ export function Badge({ className, tone = "neutral", ...props }: BadgeProps) {
     <span
       className={cn(
         /* Base: consistent padding + typography */
-        "inline-flex items-center rounded-r-chip border px-2.5 py-1 text-xs font-medium",
+        "inline-flex items-center rounded-r-chip border px-2.5 py-1 text-xs font-medium chip",
         /* Buttery transitions */
         "transition-all duration-med ease-out",
         /* Tone */

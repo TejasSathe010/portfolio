@@ -71,9 +71,19 @@ function SignalTile({
   accent?: string;
 }) {
   return (
-    <Card className="h-full group" interactive={false}>
-      <Link href={href} className="block h-full" aria-label={`Open ${title}`}>
-        <div className="p-5 sm:p-6">
+    <Card className="h-full group overflow-hidden surface-premium edge-light-top premium-border" interactive>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-med ease-out group-hover:opacity-100"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-tint/10 via-transparent to-secondary-tint/10" />
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60"
+      />
+      <Link href={href} className="relative block h-full" aria-label={`Open ${title}`}>
+        <div className="p-5 sm:p-6 relative z-10">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2 min-w-0 flex-1">
               <div className="text-base font-semibold text-fg leading-6 break-words">{title}</div>
@@ -83,8 +93,9 @@ function SignalTile({
             <div
               aria-hidden="true"
               className={cn(
-                "grid h-9 w-9 shrink-0 place-items-center rounded-r-btn border border-primary/20 bg-primary-tint/5 text-fg/75 transition-all duration-[280ms] ease-out",
-                "group-hover:bg-primary-tint/10 group-hover:border-primary/40 group-hover:text-primary"
+                "grid h-10 w-10 shrink-0 place-items-center rounded-r-btn border border-primary/20 bg-primary-tint/8 text-fg/75 transition-all duration-med ease-out",
+                "group-hover:bg-primary-tint/12 group-hover:border-primary/40 group-hover:text-primary",
+                "motion-safe:group-hover:-translate-y-[1px]"
               )}
             >
               →
@@ -113,230 +124,242 @@ export default function HomePage() {
   return (
     <div className="space-y-0">
       {/* HERO */}
-      <Section className="grid gap-6 md:grid-cols-12 md:items-start" aria-label="Hero">
-        <div className="space-y-6 md:col-span-7">
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center gap-2 rounded-r-btn border border-border bg-surface px-3 py-2 text-xs text-fg/70 shadow-sm">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" />
-              Clear narrative • progressive proof • quick scanning
-            </div>
-
-            <div className="inline-flex items-center gap-2 rounded-r-btn border border-border bg-surface px-3 py-2 text-xs text-fg/70">
-              Jump anywhere with <Kbd>⌘K</Kbd> / <Kbd>Ctrl+K</Kbd>
-            </div>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.07] text-balance max-w-prose relative">
-            <span className="absolute -left-4 top-0 h-full w-1 rounded-full bg-gradient-to-b from-primary to-secondary" />
-            <span className="relative">A portfolio built for speed — backed by measurable proof.</span>
-          </h1>
-
-          <p className="text-[15px] sm:text-base leading-7 text-muted max-w-prose text-pretty mt-4">
-            {professionalSummary}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <PrimaryCtaLink href="/start">
-              Take the 2-minute tour <span aria-hidden="true">→</span>
-            </PrimaryCtaLink>
-
-            <SecondaryCtaLink href="/case-studies">Browse case studies</SecondaryCtaLink>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted" aria-label="Quick links">
-            <Link href="/work" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
-              Work
-              <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
-            </Link>
-            <Link href="/evidence" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
-              Evidence
-              <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
-            </Link>
-            <Link href="/postmortems" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
-              Postmortems
-              <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
-            </Link>
-            <Link href="/console" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
-              Console
-              <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
-            </Link>
-          </div>
-
-          {/* "What to do next" strip (high-signal UX) */}
-          <div className="grid gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 pt-4">
-            <div className="rounded-r-card border border-primary/20 bg-primary-tint/5 p-5 sm:p-6 hover:border-primary/30 hover:bg-primary-tint/10 transition-all duration-[280ms] ease-out">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                <div className="text-xs text-fg/60 leading-6">Short on time?</div>
+      <Reveal>
+        <Section className="grid gap-6 md:grid-cols-12 md:items-start" aria-label="Hero">
+          <div className="space-y-6 md:col-span-7">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-r-btn border border-border bg-surface px-3 py-2 text-xs text-fg/70 shadow-sm">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" />
+                Clear narrative • progressive proof • quick scanning
               </div>
-              <div className="mt-2 text-sm font-semibold text-fg leading-6">Start with the first case study</div>
-              <div className="mt-2 text-xs text-fg/80 leading-6">Quickest way to understand scope and outcomes.</div>
-            </div>
 
-            <div className="rounded-r-card border border-secondary/20 bg-secondary-tint/5 p-5 sm:p-6 hover:border-secondary/30 hover:bg-secondary-tint/10 transition-all duration-[280ms] ease-out">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                <div className="text-xs text-fg/60 leading-6">Want the full picture?</div>
+              <div className="inline-flex items-center gap-2 rounded-r-btn border border-border bg-surface px-3 py-2 text-xs text-fg/70">
+                Jump anywhere with <Kbd>⌘K</Kbd> / <Kbd>Ctrl+K</Kbd>
               </div>
-              <div className="mt-2 text-sm font-semibold text-fg leading-6">Browse the Work timeline</div>
-              <div className="mt-2 text-xs text-fg/80 leading-6">Progressive disclosure — expand for details when you need them.</div>
             </div>
 
-            <div className="rounded-r-card border border-warm/20 bg-warm-tint/5 p-5 sm:p-6 hover:border-warm/30 hover:bg-warm-tint/10 transition-all duration-[280ms] ease-out">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-warm" />
-                <div className="text-xs text-fg/60 leading-6">Need proof?</div>
-              </div>
-              <div className="mt-2 text-sm font-semibold text-fg leading-6">Check Evidence and Console</div>
-              <div className="mt-2 text-xs text-fg/80 leading-6">Live vitals, performance audits, health checks, and build metadata.</div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.07] text-balance max-w-prose relative">
+              <span className="absolute -left-4 top-0 h-full w-1 rounded-full bg-gradient-to-b from-primary to-secondary" />
+              <span className="relative">Built for performance, validated by real metrics.</span>
+            </h1>
+
+            <p className="text-[15px] sm:text-base leading-7 text-muted max-w-prose text-pretty mt-4">
+              {professionalSummary}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <PrimaryCtaLink href="/start">
+                Take the 2-minute tour <span aria-hidden="true">→</span>
+              </PrimaryCtaLink>
+
+              <SecondaryCtaLink href="/case-studies">Browse case studies</SecondaryCtaLink>
             </div>
-          </div>
-        </div>
 
-        {/* RIGHT RAIL */}
-        <div className="md:col-span-5 md:sticky md:top-24 space-y-4 sm:space-y-6">
-          <Card className="relative overflow-hidden">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-gradient-to-r from-primary/15 via-secondary/12 to-warm/10 blur-2xl motion-safe:animate-[float_10s_ease-in-out_infinite]"
-            />
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Signature metrics</div>
-              <div className="mt-1 text-sm text-muted">Consistent performance patterns across all roles and projects.</div>
-            </CardHeader>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted" aria-label="Quick links">
+              <Link href="/work" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
+                Work
+                <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
+              </Link>
+              <Link href="/evidence" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
+                Evidence
+                <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
+              </Link>
+              <Link href="/postmortems" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
+                Postmortems
+                <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
+              </Link>
+              <Link href="/console" className="relative hover:text-primary transition-colors duration-[280ms] ease-out">
+                Console
+                <span className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0 bg-gradient-to-r from-transparent via-primary/40 to-transparent transition-transform duration-[280ms] ease-out group-hover:scale-x-100" />
+              </Link>
+            </div>
 
-            <CardContent className="space-y-3 text-sm">
-              {signatureMetrics.map((m) => (
-                <div
-                  key={m.label}
-                  className="flex items-center justify-between rounded-r-btn border border-secondary/20 bg-secondary-tint/5 px-4 py-3 hover:border-secondary/30 hover:bg-secondary-tint/10 transition-all duration-[280ms] ease-out"
-                >
-                  <div className="text-xs text-fg/80 leading-6">{m.label}</div>
-                  <div className="font-mono text-xs font-semibold text-fg">{m.value}</div>
+            {/* "What to do next" strip (high-signal UX) */}
+            <div className="grid gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 pt-4">
+              <div className="rounded-r-card border border-primary/20 bg-primary-tint/5 p-5 sm:p-6 hover:border-primary/30 hover:bg-primary-tint/10 transition-all duration-[280ms] ease-out">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <div className="text-xs text-fg/60 leading-6">Short on time?</div>
                 </div>
-              ))}
-
-              <div className="pt-4 text-xs text-fg/80 leading-6">
-                Tip: toggle live telemetry overlay with <Kbd>Shift</Kbd> + <Kbd>D</Kbd>.
+                <div className="mt-2 text-sm font-semibold text-fg leading-6">Start with the first case study</div>
+                <div className="mt-2 text-xs text-fg/80 leading-6">Quickest way to understand scope and outcomes.</div>
               </div>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="text-sm font-semibold text-fg">Navigate efficiently</div>
-              <div className="mt-1 text-sm text-fg/80 leading-6">Designed to help you make confident decisions quickly.</div>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-2 pt-2">
-              <Link
-                href="/start"
-                className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-              >
-                Start tour →
-              </Link>
-              <Link
-                href="/case-studies"
-                className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-              >
-                Deep dives →
-              </Link>
-              <Link
-                href="/console"
-                className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-              >
-                Console →
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-      </Section>
+              <div className="rounded-r-card border border-secondary/20 bg-secondary-tint/5 p-5 sm:p-6 hover:border-secondary/30 hover:bg-secondary-tint/10 transition-all duration-[280ms] ease-out">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                  <div className="text-xs text-fg/60 leading-6">Want the full picture?</div>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-fg leading-6">Browse the Work timeline</div>
+                <div className="mt-2 text-xs text-fg/80 leading-6">Progressive disclosure: expand for details when you need them.</div>
+              </div>
+
+              <div className="rounded-r-card border border-warm/20 bg-warm-tint/5 p-5 sm:p-6 hover:border-warm/30 hover:bg-warm-tint/10 transition-all duration-[280ms] ease-out">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-warm" />
+                  <div className="text-xs text-fg/60 leading-6">Need proof?</div>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-fg leading-6">Check Evidence and Console</div>
+                <div className="mt-2 text-xs text-fg/80 leading-6">Live vitals, performance audits, health checks, and build metadata.</div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT RAIL */}
+          <div className="md:col-span-5 md:sticky md:top-24 space-y-4 sm:space-y-6">
+            <Card className="relative overflow-hidden surface-premium edge-light-top premium-border">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-gradient-to-r from-primary/15 via-secondary/12 to-warm/10 blur-2xl motion-safe:animate-[float_10s_ease-in-out_infinite]"
+              />
+              <CardHeader>
+                <div className="text-sm font-semibold text-fg">Signature metrics</div>
+                <div className="mt-1 text-sm text-muted">Consistent performance patterns across all roles and projects.</div>
+              </CardHeader>
+
+              <CardContent className="space-y-3 text-sm">
+                {signatureMetrics.map((m) => (
+                  <div
+                    key={m.label}
+                    className="flex items-center justify-between rounded-r-btn border border-secondary/20 bg-secondary-tint/5 px-4 py-3 hover:border-secondary/30 hover:bg-secondary-tint/10 transition-all duration-[280ms] ease-out"
+                  >
+                    <div className="text-xs text-fg/80 leading-6">{m.label}</div>
+                    <div className="font-mono text-xs font-semibold text-fg">{m.value}</div>
+                  </div>
+                ))}
+
+                <div className="pt-4 text-xs text-fg/80 leading-6">
+                  Tip: toggle live telemetry overlay with <Kbd>Shift</Kbd> + <Kbd>D</Kbd>.
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="surface-premium edge-light-top premium-border">
+              <CardHeader>
+                <div className="text-sm font-semibold text-fg">Navigate efficiently</div>
+                <div className="mt-1 text-sm text-fg/80 leading-6">Designed to help you make confident decisions quickly.</div>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2 [&>*+*]:mt-0">
+                <Link
+                  href="/start"
+                  className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
+                >
+                  Start tour →
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
+                >
+                  Deep dives →
+                </Link>
+                <Link
+                  href="/console"
+                  className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
+                >
+                  Console →
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
+      </Reveal>
 
       {/* Audience guidance */}
       <Reveal delayMs={0}>
         <IntentBanner />
       </Reveal>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
+      <div className="divider-premium" />
 
       {/* SIGNAL STRIP (advanced UX) */}
       <Section aria-label="High-signal navigation">
-        <SectionHeader
-          title="Quick navigation"
-          description="Fastest paths to the most relevant information."
-          accent="primary"
-          action={
-            <div className="text-sm text-muted leading-6">
-              Tip: <Kbd>⌘K</Kbd> / <Kbd>Ctrl+K</Kbd> to jump
-            </div>
-          }
-          className="mb-8 md:mb-12"
-        />
+        <Reveal>
+          <SectionHeader
+            title="Quick navigation"
+            description="Fastest paths to the most relevant information."
+            accent="primary"
+            action={
+              <div className="text-sm text-muted leading-6">
+                Tip: <Kbd>⌘K</Kbd> / <Kbd>Ctrl+K</Kbd> to jump
+              </div>
+            }
+            className="mb-8 md:mb-12"
+          />
+        </Reveal>
 
         <div className="grid gap-4 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-4 items-stretch [grid-auto-rows:1fr]">
-          <SignalTile
-            title="Start tour"
-            desc="Guided overview: outcomes first, with details available when you need them."
-            href="/start"
-            meta={
-              <>
-                <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5">
-                  2 minutes
-                </span>
-                <span className="text-fg/50">•</span>
-                <span className="text-[11px] text-fg/70 leading-5">best first click</span>
-              </>
-            }
-            accent="from-primary-tint/12 to-secondary-tint/8"
-          />
-          <SignalTile
-            title="Case studies"
-            desc="Deep dives: constraints, decisions, measurable outcomes, and tradeoffs."
-            href="/case-studies"
-            meta={
-              <>
-                <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5">
-                  deep dives
-                </span>
-                <span className="text-fg/50">•</span>
-                <span className="text-[11px] text-fg/70 leading-5">highest signal</span>
-              </>
-            }
-            accent="from-secondary-tint/12 to-warm-tint/8"
-          />
-          <SignalTile
-            title="Evidence"
-            desc="Proof: performance audits, live vitals, and supporting artifacts."
-            href="/evidence"
-            meta={
-              <>
-                <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5">
-                  receipts
-                </span>
-                <span className="text-fg/50">•</span>
-                <span className="text-[11px] text-fg/70 leading-5">verify claims</span>
-              </>
-            }
-            accent="from-warm-tint/12 to-primary-tint/8"
-          />
-          <SignalTile
-            title="Console"
-            desc="Operational dashboard: health checks, build metadata, and performance signals."
-            href="/console"
-            meta={
-              <>
-                <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5">
-                  ops
-                </span>
-                <span className="text-fg/50">•</span>
-                <span className="text-[11px] text-fg/70 leading-5">product thinking</span>
-              </>
-            }
-            accent="from-primary-tint/10 to-warm-tint/8"
-          />
+          <Reveal delayMs={0}>
+            <SignalTile
+              title="Start tour"
+              desc="Guided overview: outcomes first, with details available when you need them."
+              href="/start"
+              meta={
+                <>
+                  <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5 chip">
+                    2 minutes
+                  </span>
+                  <span className="text-fg/50">•</span>
+                  <span className="text-[11px] text-fg/70 leading-5">best first click</span>
+                </>
+              }
+              accent="from-primary-tint/12 to-secondary-tint/8"
+            />
+          </Reveal>
+          <Reveal delayMs={60}>
+            <SignalTile
+              title="Case studies"
+              desc="Deep dives: constraints, decisions, measurable outcomes, and tradeoffs."
+              href="/case-studies"
+              meta={
+                <>
+                  <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5 chip">
+                    deep dives
+                  </span>
+                  <span className="text-fg/50">•</span>
+                  <span className="text-[11px] text-fg/70 leading-5">highest signal</span>
+                </>
+              }
+              accent="from-secondary-tint/12 to-warm-tint/8"
+            />
+          </Reveal>
+          <Reveal delayMs={120}>
+            <SignalTile
+              title="Evidence"
+              desc="Proof: performance audits, live vitals, and supporting artifacts."
+              href="/evidence"
+              meta={
+                <>
+                  <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5 chip">
+                    receipts
+                  </span>
+                  <span className="text-fg/50">•</span>
+                  <span className="text-[11px] text-fg/70 leading-5">verify claims</span>
+                </>
+              }
+              accent="from-warm-tint/12 to-primary-tint/8"
+            />
+          </Reveal>
+          <Reveal delayMs={180}>
+            <SignalTile
+              title="Console"
+              desc="Operational dashboard: health checks, build metadata, and performance signals."
+              href="/console"
+              meta={
+                <>
+                  <span className="rounded-full border border-secondary/30 bg-secondary-tint/8 px-2.5 py-1 text-[11px] font-semibold text-fg/80 leading-5 chip">
+                    ops
+                  </span>
+                  <span className="text-fg/50">•</span>
+                  <span className="text-[11px] text-fg/70 leading-5">product thinking</span>
+                </>
+              }
+              accent="from-primary-tint/10 to-warm-tint/8"
+            />
+          </Reveal>
         </div>
       </Section>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
+      <div className="divider-premium" />
 
       {/* FEATURED DEEP DIVES */}
       <Section theme="secondary" aria-label="Featured case studies">
@@ -372,7 +395,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
+      <div className="divider-premium" />
 
       {/* PROOF / TRUST (advanced UX) */}
       <Section theme="warm" aria-label="Operational proof">
@@ -446,7 +469,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
+      <div className="divider-premium" />
 
       {/* EXPLORE */}
       <Reveal>

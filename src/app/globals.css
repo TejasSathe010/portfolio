@@ -120,12 +120,14 @@
   --stackLg: 1.5rem;    /* 24px */
 
   /* ─────────────────────────────────────────────────────────────────
-     MOTION (Premium, buttery)
+     MOTION (Premium, engineered)
      ───────────────────────────────────────────────────────────────── */
-  --easeOut: cubic-bezier(0.22, 1, 0.36, 1);
-  --durFast: 180ms;
-  --durMed: 280ms;
-  --durSlow: 420ms;
+  --easeOut: cubic-bezier(0.16, 1, 0.3, 1);
+  --durFast: 140ms;
+  --durMed: 220ms;
+  --durSlow: 320ms;
+  --lift1: 1px;
+  --lift2: 2px;
 
   /* Legacy aliases for compatibility */
   --primary: var(--p);
@@ -200,6 +202,7 @@
 html {
   height: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -387,6 +390,15 @@ a {
   }
 }
 
+@keyframes target-pulse {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes skeleton {
   0% {
     background-position: -200% 0;
@@ -422,6 +434,12 @@ a {
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
   }
+
+  .reveal,
+  .reveal-on {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -439,13 +457,130 @@ a {
   /* Reveal animation */
   .reveal {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 16px, 0);
+    will-change: transform, opacity;
+  }
+
+  .reveal-on {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
     transition: opacity var(--durSlow) var(--easeOut), transform var(--durSlow) var(--easeOut);
   }
 
-  .reveal-in {
+  /* Anchor target pulse */
+  .anchor-target {
+    position: relative;
+  }
+
+  .anchor-target:target::after {
+    content: "";
+    position: absolute;
+    inset: -8px -4px;
+    border-radius: 14px;
+    background: rgba(var(--p), 0.08);
+    opacity: 0;
+    animation: target-pulse var(--durSlow) var(--easeOut);
+    pointer-events: none;
+  }
+
+  /* Chip micro motion */
+  .chip {
+    position: relative;
+    transition: border-color var(--durFast) var(--easeOut), background-color var(--durFast) var(--easeOut), color var(--durFast) var(--easeOut);
+  }
+
+  .chip::after {
+    content: "";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    border-radius: 999px;
+    background: rgba(var(--p), 0.6);
+    opacity: 0;
+    transition: opacity var(--durFast) var(--easeOut);
+    pointer-events: none;
+  }
+
+  .chip:hover::after {
     opacity: 1;
-    transform: translateY(0);
+  }
+
+  /* Premium surface treatment */
+  .surface-premium {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(var(--p), 0.06) 0%, transparent 55%),
+      linear-gradient(135deg, rgba(var(--s), 0.04), transparent 45%),
+      rgb(var(--surface));
+  }
+
+  /* Subtle specular hairline */
+  .edge-light-top {
+    position: relative;
+  }
+
+  .edge-light-top::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(var(--p), 0.35), rgba(var(--s), 0.25), transparent);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Premium border glow (static, subtle) */
+  .premium-border {
+    position: relative;
+  }
+
+  .premium-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(var(--p), 0.25), transparent 45%, rgba(var(--s), 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Premium inline link underline */
+  .link-premium {
+    position: relative;
+  }
+
+  .link-premium::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: linear-gradient(to right, transparent, rgba(var(--s), 0.6), transparent);
+    transition: transform var(--durMed) var(--easeOut);
+  }
+
+  .link-premium:hover::after,
+  .link-premium:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Premium divider */
+  .divider-premium {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(to right, transparent, rgba(var(--p), 0.25), rgba(var(--s), 0.2), transparent);
   }
 
   /* Skeleton loader */
@@ -571,8 +706,7 @@ a {
     transition:
       border-color 120ms var(--easeOut),
       background-color 120ms var(--easeOut),
-      transform 280ms var(--easeOut) 80ms,
-      box-shadow 280ms var(--easeOut) 80ms;
+      transform var(--durMed) var(--easeOut) 120ms;
   }
 
   .hover-lift:hover {
@@ -582,7 +716,7 @@ a {
 
   @media (prefers-reduced-motion: no-preference) {
     .hover-lift:hover {
-      transform: translateY(-2px);
+      transform: translate3d(0, calc(var(--lift2) * -1), 0);
       box-shadow: var(--shadow2);
     }
   }
@@ -592,17 +726,17 @@ a {
     transition:
       border-color 120ms var(--easeOut),
       background-color 120ms var(--easeOut),
-      transform 280ms var(--easeOut) 60ms,
-      box-shadow 280ms var(--easeOut) 60ms;
+      transform var(--durMed) var(--easeOut) 120ms;
   }
 
   .card-interactive:hover {
     border-color: rgba(var(--p), 0.2);
+    background-color: rgb(var(--surface2));
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .card-interactive:hover {
-      transform: translateY(-2px);
+      transform: translate3d(0, calc(var(--lift2) * -1), 0);
       box-shadow: var(--shadow2);
     }
   }
@@ -614,6 +748,8 @@ a {
     flex-shrink: 0;
     stroke-width: 2;
     opacity: 0.75;
+    display: inline-block;
+    vertical-align: -0.125em;
   }
 
   .icon-nav {
@@ -622,6 +758,8 @@ a {
     flex-shrink: 0;
     stroke-width: 2;
     opacity: 0.75;
+    display: inline-block;
+    vertical-align: -0.125em;
   }
 
   .icon-feature {
@@ -630,6 +768,8 @@ a {
     flex-shrink: 0;
     stroke-width: 2;
     opacity: 0.75;
+    display: inline-block;
+    vertical-align: -0.125em;
   }
 
   .icon-inline:hover,

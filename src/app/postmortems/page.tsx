@@ -118,7 +118,7 @@ export default function PostmortemsPage() {
         </div>
       </header>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="divider-premium" />
 
       <section className="grid gap-4 md:grid-cols-2 items-stretch [grid-auto-rows:1fr]" aria-label="Postmortems list">
         {incidents.map((i) => (

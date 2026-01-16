@@ -95,7 +95,7 @@ export default function EvidencePage() {
         </div>
       </header>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="divider-premium" />
 
       <section className="space-y-4" aria-label="Evidence links">
         <div className="flex items-end justify-between gap-4">
@@ -113,7 +113,7 @@ export default function EvidencePage() {
         </div>
       </section>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="divider-premium" />
 
       <section className="space-y-3" aria-label="Live evidence">
         <div>

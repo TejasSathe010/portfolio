@@ -26,7 +26,7 @@ export function Button({
         /* Base: consistent touch target + buttery motion */
         "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-r-btn font-semibold",
         "transition-all duration-med ease-out",
-        "motion-safe:active:translate-y-[1px]",
+        "motion-safe:hover:-translate-y-[1px] motion-safe:active:translate-y-[1px] active:opacity-95",
         "disabled:cursor-not-allowed disabled:opacity-60",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
 
