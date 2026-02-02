@@ -22,7 +22,7 @@ export type ArchEdge = {
   details?: string;
 };
 
-export type TimelineStep = 
+export type TimelineStep =
   | { kind: "edge"; edgeId: string }
   | { kind: "parallel"; edges: string[] };
 
@@ -315,5 +315,69 @@ export const architecturesBySlug: Record<string, ArchitectureModel> = {
         ]
       }
     ]
+  },
+  "node-esm-loader-gap-analysis": {
+    title: "Architectural Walls: Node.js ESM Loader Blob Imports",
+    nodes: [
+      { id: "userland", title: "User-land context", subtitle: "import(blobUrl) call", tone: "neutral" },
+      { id: "registry", title: "Protocol Registry", subtitle: "get_format.js (Whitelist)", tone: "warn" },
+      { id: "loader", title: "ESM Loader (Worker)", subtitle: "load.js execution path", tone: "accent" },
+      { id: "binding", title: "C++ Blob Binding", subtitle: "node_blob.cc", tone: "accent" },
+      { id: "tls", title: "Thread-Local Registry", subtitle: "TLS storage (Isolated)", tone: "warn" },
+      { id: "workaround", title: "JimmyWarting Workaround", subtitle: "MessageChannel + module.register", tone: "neutral" }
+    ],
+    edges: [
+      { id: "call", from: "userland", to: "registry", label: "1) Schema lookup", lane: "request" },
+      { id: "block", from: "registry", to: "registry", label: "Wall: Rejected protocol", lane: "control" },
+      { id: "fetch", from: "loader", to: "binding", label: "2) Sync source fetch", lane: "request" },
+      { id: "isolate", from: "binding", to: "tls", label: "Wall: Thread isolation", lane: "control" },
+      { id: "bridge", from: "workaround", to: "loader", label: "Bridge: Cross-thread port", lane: "async" }
+    ],
+    groups: [
+      {
+        id: "js-layer",
+        title: "JavaScript internals",
+        caption: "Loader registry & execution",
+        nodeIds: ["registry", "loader"]
+      },
+      {
+        id: "cpp-layer",
+        title: "C++ internals",
+        caption: "Thread-local storage",
+        nodeIds: ["binding", "tls"]
+      }
+    ],
+    scenarios: [
+      {
+        id: "baseline",
+        label: "The Protocol Wall",
+        focusEdgeLanes: ["request", "control"],
+        note: "Investigation isolated the first failure to get_format.js. The ESM loader uses a closed whitelist for protocols. Any schema not in the list is rejected before the loader even attempts a fetch.",
+        timeline: [
+          { kind: "edge", edgeId: "call" },
+          { kind: "edge", edgeId: "block" }
+        ]
+      },
+      {
+        id: "spike",
+        label: "The Isolation Wall",
+        focusEdgeLanes: ["request", "control"],
+        note: "Even if the protocol is accepted, the C++ layer in node_blob.cc uses Thread-Local Storage. Blobs created on the main thread are invisible to the loader worker threads, blocking synchronous resolution.",
+        timeline: [
+          { kind: "edge", edgeId: "fetch" },
+          { kind: "edge", edgeId: "isolate" }
+        ]
+      },
+      {
+        id: "cache",
+        label: "The Workaround Bridge",
+        focusEdgeLanes: ["async"],
+        note: "The JimmyWarting workaround bypassed these walls by using MessageChannel to transfer Blob data between threads, confirming the technical assessment of the thread-local isolation problem.",
+        timeline: [
+          { kind: "edge", edgeId: "bridge" }
+        ]
+      }
+    ]
   }
 };
+

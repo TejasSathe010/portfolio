@@ -243,21 +243,15 @@ export default function HomePage() {
                 <Link
                   href="/start"
                   className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-                >
-                  Start tour →
-                </Link>
+                >Start tour →</Link>
                 <Link
                   href="/case-studies"
                   className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-                >
-                  Deep dives →
-                </Link>
+                >Deep dives →</Link>
                 <Link
                   href="/console"
                   className="rounded-r-btn border border-border bg-surface px-3 py-2 text-xs font-semibold text-fg/70 hover:text-primary hover:bg-surface-2 hover:border-primary/30 transition-all duration-[280ms] ease-out"
-                >
-                  Console →
-                </Link>
+                >Console →</Link>
               </CardContent>
             </Card>
           </div>

@@ -38,6 +38,72 @@ export const signatureMetrics = [
 
 export const caseStudies: CaseStudy[] = [
   {
+    slug: "node-esm-loader-gap-analysis",
+    title: "Architectural Gap Analysis: Node.js ESM Loader",
+    pdfPath: "/case-studies/node-esm-loader-gap-analysis/Case_Study_Node_ESM_Loader.pdf",
+    summary:
+      "Performed a Root Cause Analysis of the Node.js internal ESM loader to identify architectural walls blocking Blob URL imports. Isolated failure points across the JS/C++ boundary and provided the technical mapping used by core contributors for a functional workaround.",
+    tags: ["Node.js Core", "ESM Loader", "C++ Bindings", "V8 internals", "Thread-Local Storage"],
+    timeline: "Dec 2025",
+    role: "Open Source Researcher & Internals Engineer",
+    highlights: [
+      "Isolated failure points in the Protocol Registry, Synchronous Execution paths, and Thread-Local isolation.",
+      "Identified technical barriers blocking import(blobUrls) across the JavaScript and C++ boundary.",
+      "Provided the technical mapping that enabled core contributors to develop a functional workaround.",
+      "Prevented community effort from being wasted on architectural dead ends."
+    ],
+    problem:
+      "Modern browsers support dynamic imports from Blob URLs, but Node.js lacked this capability. The internal ESM loader had architectural constraints that rejected these protocols due to internal whitelists and synchronous lookup requirements that conflicted with how Blobs are stored in memory.",
+    constraints: [
+      "The protocol registry uses a closed whitelist for URL schemes.",
+      "The load.js execution path must support synchronous require() of ES modules.",
+      "Blob storage in node_blob.cc utilizes Thread-Local Storage, making it invisible to the loader worker threads.",
+      "Cross-thread communication is forbidden by the synchronous constraints of the loader."
+    ],
+    approach: [
+      "Audited the Node.js source code in lib/internal/modules/esm to identify where the protocol was rejected.",
+      "Isolated the failure to the Protocol Registry Wall in get_format.js where handle schemas are whitelisted.",
+      "Analyzed the Synchronous Constraint in load.js that blocks asynchronous lookups during module loading.",
+      "Performed a deep-dive into src/node_blob.cc to understand Thread-Local Isolation and its impact on cross-thread visibility.",
+      "Communicated findings to the community, providing the technical basis for subsequent workaround implementations."
+    ],
+    architecture: [
+      "V8 Bindings and the JS/C++ boundary in Node.js core.",
+      "The Node.js ESM loader protocol registry and handler system.",
+      "Synchronous vs asynchronous execution paths in module loading.",
+      "Thread-Local Storage (TLS) for Blob data in the C++ layer."
+    ],
+    outcomes: [
+      "Validations: Core contributors built a workaround using the identified anchors (resolve, load, initialize).",
+      "Efficiency: Identified architectural walls early, saving community development time.",
+      "Strategic Impact: Provided a clear blueprint for the eventual migration of the Blob registry to a global state.",
+      "Root Cause isolation: Documented why a direct native implementation is currently blocked by the loader threading model."
+    ],
+    tradeoffs: [
+      "Technical Analysis: Prioritized architectural mapping over direct code contribution due to fundamental threading constraints.",
+      "System Integrity: Favored long-term architectural stability over a quick but potentially breaking patch.",
+      "Process Awareness: Accepted triage protocols as a necessity while maintaining high-signal communication."
+    ],
+    evidence: [
+      {
+        title: "GitHub Issue #61013",
+        type: "REPO",
+        href: "https://github.com/nodejs/node/issues/61013",
+        note: "Official Feature Request and Technical Discussion"
+      }
+    ],
+    intentNotes: {
+      RECRUITER: {
+        focus: "Systems engineering and deep root cause analysis in a major open source repository.",
+        whatToAskMe: ["What makes the Node.js loader unique?", "How did you navigate a million-line codebase?", "What was the result of your analysis?"]
+      },
+      HIRING_MANAGER: {
+        focus: "Navigating the JS/C++ boundary and understanding complex multi-threaded architectural constraints.",
+        whatToAskMe: ["Explain the Thread-Local Storage isolation issue", "How the synchronous loader constraint blocks async lookups", "Why a direct PR was not feasible"]
+      },
+    }
+  },
+  {
     slug: "exactly-once-semantics-centiro",
     title: "Exactly-Once Semantics (Centiro) Preventing SEV-1 Outages",
     pdfPath: "/case-studies/Case-Study-Centiro.pdf",
@@ -425,12 +491,13 @@ export const projects: ProjectItem[] = [
     ]
   },
   {
-    name: "TokenThrifty",
-    stack: ["Node.js", "TF-IDF", "LLM", "Compression", "OpenAI API"],
-    links: [{ label: "Live", href: "https://tejas-sathe-portfolio.netlify.app/token-thrifty" }],
+    name: "Memorable",
+    stack: ["TypeScript", "Manifest V3", "Node.js", "PGVector", "HNSW", "Chrome APIs"],
+    links: [{ label: "Live", href: "https://memorable-one.vercel.app/" }],
     bullets: [
-      "Reduced LLM cost 70% for 60 users by using TF-IDF compression and request interception.",
-      "Built a pre-processor that pruned redundant context from prompts before API calls, dynamically adjusting ratios to preserve critical instructions."
+      "Neural Compression: Reduced prompt tokens by up to 40% using custom TF-IDF-like algorithms and extractive summarization.",
+      "Smart Vector Memory: Implemented local-first semantic memory using Chrome storage and IndexedDB for instant context retrieval.",
+      "Real-time Token Telemetry: Built granular visibility into AI spend and latency using Chrome's DeclarativeNetRequest API for intercepting network traffic."
     ]
   },
   {
